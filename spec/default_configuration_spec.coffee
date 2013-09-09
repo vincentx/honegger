@@ -3,6 +3,9 @@ describe 'honegger:configuration:default', ->
   it 'multiple sections should be enabled', ->
     expect($.fn.honegger.defaults.multipleSections).toBe(true)
 
+  it 'data-role=toolbar should be used as the selector for toolbar', ->
+    expect($.fn.honegger.defaults.toolbar).toBe('*[data-role="toolbar"]')
+
   it 'ctrl/meta + b to bold text should be enabled', ->
     expect($.fn.honegger.defaults.hotkeys['ctrl+b meta+b']).toBe('bold')
 
@@ -23,5 +26,3 @@ describe 'honegger:configuration:default', ->
 
   it 'shift + tab to outdent text should be enabled', ->
     expect($.fn.honegger.defaults.hotkeys['shift+tab']).toBe('outdent')
-
-
