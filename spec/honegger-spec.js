@@ -3,6 +3,9 @@
     it('multiple sections should be enabled', function() {
       return expect($.fn.honegger.defaults.multipleSections).toBe(true);
     });
+    it('data-role=toolbar should be used as the selector for toolbar', function() {
+      return expect($.fn.honegger.defaults.toolbar).toBe('*[data-role="toolbar"]');
+    });
     it('ctrl/meta + b to bold text should be enabled', function() {
       return expect($.fn.honegger.defaults.hotkeys['ctrl+b meta+b']).toBe('bold');
     });

@@ -1,4 +1,6 @@
 (($, document) ->
+  $.fn.honegger = ->
+
   $.fn.honegger.defaults =
     multipleSections: true
     toolbar: '*[data-role="toolbar"]'
