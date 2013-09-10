@@ -40,6 +40,12 @@ keydown = (key) ->
   e.which = if typeof key == 'string' then key.charCodeAt(0) else key
   e
 
+keyup= (key) ->
+  e = $.Event('keyup')
+  e.which = if typeof key == 'string' then key.charCodeAt(0) else key
+  e
+
+
 $inside = '.inside'
 $outside = '.outside'
 

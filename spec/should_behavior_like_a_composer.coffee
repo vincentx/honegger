@@ -21,6 +21,17 @@ shouldBehaviorLikeAComposer = (context) ->
       context.composer.honegger('execCommand', 'bold')
       expect(document.execCommand).not.toHaveBeenCalled()
 
+
+  describe 'highlight toolbar button', ->
+    beforeEach ->
+      select($inside, $editable.paragraph)
+      spyOn(document, 'queryCommandState').andReturn(true)
+
+    it 'should highlight toolbar button', ->
+      press keyup('A')
+      expect($('a[data-command="bold"]')[0]).toHaveClass('honegger-button-active')
+
+
   describe 'response to hotkeys', ->
     beforeEach ->
       spyOn(document, 'execCommand')
