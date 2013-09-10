@@ -12,6 +12,7 @@ module.exports = (grunt) ->
     jasmine:
       src: 'lib/**/*.js'
       options:
+        keepRunner: true
         specs: 'spec/**/*.js'
         vendor: ['vendor/jquery-2.0.3.min.js', 'vendor/jquery.hotkeys.js', 'vendor/jasmine-jquery.js']
     watch:

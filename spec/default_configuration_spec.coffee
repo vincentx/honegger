@@ -6,6 +6,9 @@ describe 'honegger:configuration:default', ->
   it 'data-role=toolbar should be used as the selector for toolbar', ->
     expect($.fn.honegger.defaults.toolbar).toBe('*[data-role="toolbar"]')
 
+  it 'data-command should be used as the toolbar button command', ->
+    expect($.fn.honegger.defaults.buttons).toBe('*[data-command]')
+
   it 'ctrl/meta + b to bold text should be enabled', ->
     expect($.fn.honegger.defaults.hotkeys['ctrl+b meta+b']).toBe('bold')
 
