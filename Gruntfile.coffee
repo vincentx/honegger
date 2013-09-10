@@ -6,14 +6,17 @@ module.exports = (grunt) ->
           bare: true
         files:
           'lib/honegger.js': ['lib/**/*.coffee']
+          'build/honegger-spec-helpers.js': ['spec/spec_helpers.coffee']
+          'build/honegger-shared-spec.js': ['spec/should_*.coffee']
       compile:
         files:
-          'spec/honegger-spec.js': ['spec/**/*.coffee']
+          'build/honegger-spec.js': ['spec/*_spec.coffee']
     jasmine:
       src: 'lib/**/*.js'
       options:
         keepRunner: true
-        specs: 'spec/**/*.js'
+        specs: ['build/honegger-shared-spec.js', 'build/honegger-spec.js']
+        helpers: 'build/honegger-spec-helpers.js'
         vendor: ['vendor/jquery-2.0.3.min.js', 'vendor/jquery.hotkeys.js', 'vendor/jasmine-jquery.js']
     watch:
       files: '**/*.coffee'
