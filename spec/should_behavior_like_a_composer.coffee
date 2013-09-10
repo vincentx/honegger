@@ -1,7 +1,4 @@
 shouldBehaviorLikeAComposer = (context) ->
-  beforeEach ->
-    context.composer.honegger()
-
   describe 'initialize composer ', ->
     it 'should store widget instance in data attribute', ->
       expect(context.composer.data('honegger')).toBeDefined()
