@@ -1,10 +1,9 @@
 (($, document, window) ->
   Honegger = (element, options) ->
-    this.element = $(element)
-    this.options = options
+    composer = $(element)
 
-    this.element.data('honegger', this)
-    this.element.addClass('has-honegger')
+    composer.data('honegger', this)
+    composer.addClass('has-honegger')
 
     currentRange = ->
       selection = window.getSelection()
@@ -12,19 +11,36 @@
         range = selection.getRangeAt(0)
         return range if $.inArray(element, $(range.startContainer).parents()) != -1
 
-    this.execCommand = (command) ->
+    makeComposer = (element)->
+      element.attr('contenteditable', 'true').on('mouseup keyup mouseout focus', ->
 
+      )
+
+    makeComposers = (element) ->
+      element.find(options.editableSelector).andSelf().filter(options.editableSelector).each ->
+        makeComposer($(this))
+      element
+
+    this.execCommand = (command) ->
       document.execCommand(command) if currentRange()?
+
+    if (options.multipleSections)
+      this.insertSection = (template) ->
+        composer.append(makeComposers($(template)))
+      makeComposers(composer)
+    else
+      makeComposer(composer)
 
   $.fn.honegger = (options)->
     parameters = $.makeArray(arguments).slice(1)
     this.each ->
       instance = $.data(this, 'honegger')
-      return new Honegger(this, options) unless instance
+      return new Honegger(this, $.extend({}, $.fn.honegger.defaults, options)) unless instance
       instance[options].apply(instance, parameters) if typeof(options) == 'string'
 
   $.fn.honegger.defaults =
     multipleSections: true
+    editableSelector: '*[data-role="composer"]'
     toolbar: '*[data-role="toolbar"]'
     buttons: '*[data-command]'
     hotkeys:
