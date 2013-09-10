@@ -14,3 +14,7 @@ describe 'single section composer', ->
   it 'should ignore all composable items in composer', ->
     expect(context.composer.find('*[data-role="composer"]')).not.toHaveAttr('contenteditable')
 
+  it 'should not have insert section method', ->
+    context.composer.honegger('insertSection', '<div id="section"></div>')
+    expect($("#section").length).toBe(0)
+

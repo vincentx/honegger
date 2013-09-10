@@ -13,3 +13,8 @@ describe 'multiple sections composer', ->
 
   it 'should enable contentable for all composable items in composer', ->
     expect(context.composer.find('*[data-role="composer"]')).toHaveAttr('contenteditable', 'true')
+
+  it 'should inserted section to composer', ->
+    context.composer.honegger('insertSection', '<div data-role="composer" class="inside" id="section"></div>')
+    expect($("#section")[0]).toHaveAttr('contenteditable')
+

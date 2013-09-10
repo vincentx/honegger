@@ -7,6 +7,8 @@
 
     toolbar = if typeof options.toolbar == 'string' then $(options.toolbar) else options.toolbar
 
+    $.fn.honegger.initToolbar composer, toolbar, options
+
     currentRange = ->
       selection = window.getSelection()
       if selection.getRangeAt? && selection.rangeCount
@@ -30,7 +32,7 @@
 
     makeComposer = (element)->
       element.attr('contenteditable', 'true').on 'mouseup keyup mouseout focus', ->
-        $.fn.honegger.toolbar(toolbar, currentRange, options)
+        $.fn.honegger.updateToolbar(toolbar, options)
       for key, command of options.hotkeys
         bindHotkey(element, key, command)
 
@@ -54,10 +56,16 @@
     this.each ->
       instance = $.data(this, 'honegger')
       return new Honegger(this, $.extend({}, $.fn.honegger.defaults, options)) unless instance
-      instance[options].apply(instance, parameters) if typeof(options) == 'string'
+      instance[options].apply(instance, parameters) if typeof(options) == 'string' && instance[options]?
 
-  $.fn.honegger.toolbar = (toolbar, currentRange, options)->
-    $(options.buttons, toolbar).each () ->
+  $.fn.honegger.initToolbar = (composer, toolbar, options) ->
+    $(options.buttons, toolbar).each ->
+      button = $(this)
+      button.click ->
+        composer.honegger('execCommand', button.attr(options.buttonCommand))
+
+  $.fn.honegger.updateToolbar = (toolbar, options)->
+    $(options.buttons, toolbar).each ->
       button = $(this)
       command = button.attr(options.buttonCommand)
       if document.queryCommandState(command)
