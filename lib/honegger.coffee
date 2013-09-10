@@ -1,9 +1,8 @@
 (($, document, window) ->
   Honegger = (element, options) ->
-    self = this
     composer = $(element)
 
-    composer.data('honegger', self)
+    composer.data('honegger', this)
     composer.addClass('honegger-composer')
 
     currentRange = ->
@@ -12,12 +11,15 @@
         range = selection.getRangeAt(0)
         return range if $.inArray(element, $(range.startContainer).parents()) != -1
 
+    execCommand = (command)->
+      document.execCommand(command)
+
     bindHotkey = (target, key, command) ->
       target.keydown(key,(e)->
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
           e.stopPropagation()
-          self.execCommand(command)
+          execCommand(command)
       ).keyup(key, (e) ->
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
@@ -36,11 +38,11 @@
         makeComposer($(this))
       element
 
-    self.execCommand = (command) ->
-      document.execCommand(command) if currentRange()?
+    this.execCommand = (command) ->
+      execCommand(command) if currentRange()?
 
     if (options.multipleSections)
-      self.insertSection = (template) ->
+      this.insertSection = (template) ->
         composer.append(makeComposers($(template)))
       makeComposers(composer)
     else

@@ -2,7 +2,7 @@ describe 'multiple sections composer', ->
   context = {}
 
   beforeEach ->
-    loadFixtures('composer.html')
+    loadFixtures('multi-sections-composer.html')
     context.composer = $('#composer')
     context.composer.honegger()
 

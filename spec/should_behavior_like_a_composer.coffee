@@ -13,13 +13,34 @@ shouldBehaviorLikeAComposer = (context) ->
 
     it 'should execute command if selection inside composer', ->
       select($inside, $editable.paragraph)
-      $('#composer').honegger('execCommand', 'bold')
+      context.composer.honegger('execCommand', 'bold')
       expect(document.execCommand).toHaveBeenCalledWith('bold')
 
     it 'should execute command if selection outside composer', ->
       select($outside, $editable.paragraph)
-      $('#composer').honegger('execCommand', 'bold')
+      context.composer.honegger('execCommand', 'bold')
       expect(document.execCommand).not.toHaveBeenCalled()
+
+  describe 'response to hotkeys', ->
+    beforeEach ->
+      spyOn(document, 'execCommand')
+      select($inside, $editable.paragraph)
+
+    it 'should be able use to ctrl + b to bold item', ->
+      press('ctrl', 'B')
+      expect(document.execCommand).toHaveBeenCalledWith('bold')
+
+    it 'should be able use to meta + b to bold item', ->
+      press('meta', 'B')
+      expect(document.execCommand).toHaveBeenCalledWith('bold')
+
+    it 'should be able use to ctrl + i to italic item', ->
+      press('ctrl', 'I')
+      expect(document.execCommand).toHaveBeenCalledWith('italic')
+
+    it 'should be able use to meta + i to italic item', ->
+      press('meta', 'I')
+      expect(document.execCommand).toHaveBeenCalledWith('italic')
 
 
 
