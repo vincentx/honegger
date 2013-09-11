@@ -18,10 +18,15 @@ describe 'multiple sections composer', ->
     context.composer.honegger('insertSection', '<div data-role="composer" class="inside" id="section"></div>')
     expect($("#section")[0]).toHaveAttr('contenteditable')
 
-  it 'should be able to disable', ->
-    context.composer.honegger('disable')
-    expect(context.composer.find('*[data-role="composer"]')).not.toHaveAttr('contenteditable', 'true')
+  describe 'disabled composer', ->
+    beforeEach ->
+      context.composer.honegger('disable')
 
-  it 'should be able to re-enable disabled composer', ->
-    context.composer.honegger('disable').honegger('enable')
-    expect(context.composer.find('*[data-role="composer"]')).toHaveAttr('contenteditable', 'true')
+    it 'should be able to disable', ->
+      expect(context.composer.find('*[data-role="composer"]')).not.toHaveAttr('contenteditable', 'true')
+
+    it 'should be able to re-enable disabled composer', ->
+      context.composer.honegger('enable')
+      expect(context.composer.find('*[data-role="composer"]')).toHaveAttr('contenteditable', 'true')
+
+    shouldBehaviorAsHotkeyDisabled()
