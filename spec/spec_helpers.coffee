@@ -53,4 +53,8 @@ $editable = {
   paragraph: read('_editable_paragraph.html')
 }
 
+$components = {
+  text: read('_text_component.html')
+}
+
 $tab = 9

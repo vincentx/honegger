@@ -31,6 +31,26 @@ shouldBehaviorLikeAComposer = (context) ->
       press keyup('A')
       expect($('a[data-command="bold"]')[0]).toHaveClass('honegger-button-active')
 
+  describe 'insert component', ->
+    beforeEach ->
+      @enhancer =
+        enhance: ->
+      spyOn(@enhancer, 'enhance')
+
+    it 'should append component inside composer', ->
+      select($inside, $editable.paragraph)
+      context.composer.honegger('insertComponent', $components.text)
+      expect($('.text-component', context.composer).length).not.toBe(0)
+
+    it 'should run enhancer after component inserted', ->
+      select($inside, $editable.paragraph)
+      context.composer.honegger('insertComponent', $components.text, @enhancer.enhance)
+      expect(@enhancer.enhance).toHaveBeenCalled()
+
+    it 'should not append component outside composer', ->
+      select($outside, $editable.paragraph)
+      context.composer.honegger('insertComponent', $components.text)
+      expect($('.text-component', context.composer).length).toBe(0)
 
   describe 'response to hotkeys', ->
     beforeEach ->
