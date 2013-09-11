@@ -17,8 +17,8 @@
         range = selection.getRangeAt(0)
         return range if $.inArray(element, $(range.startContainer).parents()) != -1
 
-    execCommand = (command)->
-      document.execCommand(command)
+    execCommand = (command, args)->
+      if args? then document.execCommand(command, false, args) else document.execCommand(command)
 
     bindHotkey = (target, key, command) ->
       target.keydown(key,(e)->
@@ -43,8 +43,8 @@
         makeComposer($(this))
       element
 
-    this.execCommand = (command) ->
-      execCommand(command) if currentRange()?
+    this.execCommand = (command, args) ->
+      execCommand(command, args) if !disable && currentRange()?
 
     if (options.multipleSections)
       this.insertSection = (template) ->
