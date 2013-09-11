@@ -2,7 +2,7 @@ jasmine.getFixtures().fixturesPath = 'spec/fixtures'
 
 select = (selector, element) ->
   $(selector).append($(element))
-  window.getSelection().setPosition($("#selection")[0], 1)
+  window.getSelection().setPosition($('.selection', $(selector))[0], 1)
 
 press = (e)->
   selection = window.getSelection()
@@ -48,6 +48,7 @@ keyup= (key) ->
 
 $inside = '.inside'
 $outside = '.outside'
+$inside_component = '.component-inside'
 
 $editable = {
   paragraph: read('_editable_paragraph.html')

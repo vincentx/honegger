@@ -1,8 +1,8 @@
-shouldBehaviorAsHotkeyDisabled = ->
+shouldBehaviorAsHotkeyDisabled = (target)->
   describe 'response to hotkeys', ->
     beforeEach ->
       spyOn(document, 'execCommand')
-      select($inside, $editable.paragraph)
+      select(target, $editable.paragraph)
 
     it 'should be able use to ctrl + b to bold item', ->
       press ctrl('B')

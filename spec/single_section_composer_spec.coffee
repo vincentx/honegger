@@ -29,6 +29,6 @@ describe 'single section composer', ->
       context.composer.honegger('enable')
       expect(context.composer[0]).toHaveAttr('contenteditable', 'true')
 
-    shouldBehaviorAsHotkeyDisabled()
+    shouldBehaviorAsHotkeyDisabled($inside)
 
 

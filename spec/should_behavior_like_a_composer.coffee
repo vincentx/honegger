@@ -52,6 +52,19 @@ shouldBehaviorLikeAComposer = (context) ->
       context.composer.honegger('insertComponent', $components.text)
       expect($('.text-component', context.composer).length).toBe(0)
 
+    describe 'editing', ->
+      beforeEach ->
+        select($inside, $editable.paragraph)
+        context.composer.honegger('insertComponent', $components.text)
+
+      it 'should not exec command if selection within component', ->
+        spyOn(document, 'execCommand')
+        select($inside_component, $editable.paragraph)
+        context.composer.honegger('execCommand', 'bold')
+        expect(document.execCommand).not.toHaveBeenCalledWith('bold')
+
+      shouldBehaviorAsHotkeyDisabled($inside_component)
+
   describe 'response to hotkeys', ->
     beforeEach ->
       spyOn(document, 'execCommand')

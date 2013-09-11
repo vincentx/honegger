@@ -11,11 +11,17 @@
 
     $.fn.honegger.initToolbar composer, toolbar, options
 
+    insideComposer = (range) ->
+      $.inArray(element, $(range.startContainer).parents()) != -1
+
+    notInsideComponent = (range) ->
+      $(range.startContainer).parents(options.componentSelector).length == 0
+
     currentRange = ->
       selection = window.getSelection()
-      if selection.getRangeAt? && selection.rangeCount
+      if selection.rangeCount
         range = selection.getRangeAt(0)
-        return range if $.inArray(element, $(range.startContainer).parents()) != -1
+        return range if insideComposer(range) && notInsideComponent(range)
 
     execCommand = (command, args)->
       if args? then document.execCommand(command, false, args) else document.execCommand(command)
@@ -25,7 +31,7 @@
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
           e.stopPropagation()
-          execCommand(command) unless disabled
+          execCommand(command) if !disabled && currentRange()?
       ).keyup(key, (e) ->
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
@@ -96,6 +102,7 @@
   $.fn.honegger.defaults =
     multipleSections: true
     editableSelector: '*[data-role="composer"]'
+    componentSelector: '*[data-role="component"]'
     toolbar: '*[data-role="toolbar"]'
     buttons: '*[data-command]'
     buttonCommand: 'data-command'

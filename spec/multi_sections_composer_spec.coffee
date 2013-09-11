@@ -29,4 +29,4 @@ describe 'multiple sections composer', ->
       context.composer.honegger('enable')
       expect(context.composer.find('*[data-role="composer"]')).toHaveAttr('contenteditable', 'true')
 
-    shouldBehaviorAsHotkeyDisabled()
+    shouldBehaviorAsHotkeyDisabled($inside)
