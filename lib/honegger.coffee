@@ -2,6 +2,8 @@
   Honegger = (element, options) ->
     composer = $(element)
 
+    disable = false
+
     composer.data('honegger', this)
     composer.addClass('honegger-composer')
 
@@ -23,7 +25,7 @@
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
           e.stopPropagation()
-          execCommand(command)
+          execCommand(command) unless disable
       ).keyup(key, (e) ->
         if target.attr('contenteditable') && target.is(':visible')
           e.preventDefault()
@@ -47,8 +49,20 @@
     if (options.multipleSections)
       this.insertSection = (template) ->
         composer.append(makeComposers($(template)))
+      this.disable = ->
+        disable = true
+        composer.find(options.editableSelector).attr('contenteditable', 'false')
+      this.enable = ->
+        disable = false
+        composer.find(options.editableSelector).attr('contenteditable', 'true')
       makeComposers(composer)
     else
+      this.disable = ->
+        disable = true
+        composer.attr('contenteditable', 'false')
+      this.enable = ->
+        disable = false
+        composer.attr('contenteditable', 'true')
       makeComposer(composer)
 
   $.fn.honegger = (options)->

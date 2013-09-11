@@ -18,3 +18,11 @@ describe 'single section composer', ->
     context.composer.honegger('insertSection', '<div id="section"></div>')
     expect($("#section").length).toBe(0)
 
+  it 'should be able to disable', ->
+    context.composer.honegger('disable')
+    expect(context.composer[0]).not.toHaveAttr('contenteditable', 'true')
+
+  it 'should be able to re-enable disabled composer', ->
+    context.composer.honegger('disable').honegger('enable')
+    expect(context.composer[0]).toHaveAttr('contenteditable', 'true')
+
