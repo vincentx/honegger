@@ -48,7 +48,7 @@
 
     if (options.multipleSections)
       this.insertSection = (template) ->
-        composer.append(makeComposers($(template)))
+        composer.append(makeComposers($(template))) unless disable
       this.disable = ->
         disable = true
         composer.find(options.editableSelector).attr('contenteditable', 'false')
