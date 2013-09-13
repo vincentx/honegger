@@ -31,7 +31,7 @@ shouldBehaviorLikeAComposer = (context) ->
       press keyup('A')
       expect($('a[data-command="bold"]')[0]).toHaveClass('honegger-button-active')
 
-  describe 'insert component', ->
+  xdescribe 'insert component', ->
     beforeEach ->
       @enhancer =
         enhance: ->

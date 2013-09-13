@@ -1,8 +1,11 @@
 (($, document, window) ->
   Honegger = (element, options) ->
+    self = this
     composer = $(element)
+    components = {}
 
     disabled = false
+    mode = 'edit'
 
     composer.data('honegger', this)
     composer.addClass('honegger-composer')
@@ -57,24 +60,62 @@
       disabled = false
       editable.attr('contenteditable', 'true')
 
+    changeMode = (element, handler) ->
+      config = element.data('component-config')
+      type = element.data('component-type')
+      $(options.configurationSelector, element).each ->
+        config[$(this).attr(options.configuration)] = $(this).val()
+      component = components[element.data('component-type')]
+      element.replaceWith(handler(component, config).data('component-config', config)
+        .attr('data-component-type', type).attr('data-role', 'component'))
+
+    editMode = (element) ->
+      self.enable()
+      changeMode element, (component, config) ->
+        editor = component.editor(options.componentEditorTemplate, config)
+        $(options.configurationSelector, editor).each ->
+          configElement = $(this)
+          configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
+        editor
+
+    previewMode = (element) ->
+      self.disable()
+      changeMode element, (component) ->
+        component.control()
+
     this.execCommand = (command, args) ->
       execCommand(command, args) if !disabled && currentRange()?
 
-    this.insertComponent = (element, enhancer) ->
+    this.insertComponent = (name) ->
+      return unless disabled || components[name]?
       range = currentRange()
-      if range?
-        component = $(element)
-        range.insertNode(component[0])
-        enhancer(component) if enhancer?
+      return unless range?
+      editor = components[name].editor(options.componentEditorTemplate, {})
+      editor.data('component-config', {}).attr('data-component-type', name).attr('data-role', 'component')
+      range.insertNode(editor[0])
+
+    this.installComponent = (name, component) ->
+      components[name] = component
+
+    this.changeMode = (new_mode) ->
+      mode = new_mode
+      handler = if mode == 'edit' then editMode else previewMode
+      composer.find(options.componentSelector).each ->
+        handler($(this))
 
     if (options.multipleSections)
-      this.insertSection = (template) -> composer.append(makeComposers($(template))) unless disabled
-      this.disable = -> disable(composer.find(options.editableSelector))
-      this.enable = -> enable(composer.find(options.editableSelector))
+      this.insertSection = (template) ->
+        composer.append(makeComposers($(template))) unless disabled
+      this.disable = ->
+        disable(composer.find(options.editableSelector))
+      this.enable = ->
+        enable(composer.find(options.editableSelector))
       makeComposers(composer)
     else
-      this.disable = -> disable(composer)
-      this.enable = -> enable(composer)
+      this.disable = ->
+        disable(composer)
+      this.enable = ->
+        enable(composer)
       makeComposer(composer)
 
   $.fn.honegger = (options)->
@@ -103,6 +144,8 @@
     multipleSections: true
     editableSelector: '*[data-role="composer"]'
     componentSelector: '*[data-role="component"]'
+    configurationSelector: 'input[data-component-config]'
+    configuration: 'data-component-config'
     toolbar: '*[data-role="toolbar"]'
     buttons: '*[data-command]'
     buttonCommand: 'data-command'
@@ -114,5 +157,8 @@
       'ctrl+z meta+z': 'undo',
       'ctrl+y meta+y meta+shift+z': 'redo',
       'shift+tab': 'outdent',
-      'tab': 'indent')(jQuery, document, window)
+      'tab': 'indent'
+    componentEditorTemplate: '<table contenteditable="false">' +
+    '<thead><tr><td class="component-header"></td></tr></thead>' +
+    '<tbody><tr><td class="component-content"></td></tr></tbody>' + '</table>')(jQuery, document, window)
 
