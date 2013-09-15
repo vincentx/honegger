@@ -6,13 +6,12 @@
 
     disabled = false
     mode = 'edit'
+    componentIds = {}
 
     composer.data('honegger', this)
     composer.addClass('honegger-composer')
 
     toolbar = if typeof options.toolbar == 'string' then $(options.toolbar) else options.toolbar
-
-    $.fn.honegger.initToolbar composer, toolbar, options
 
     insideComposer = (range) ->
       $.inArray(element, $(range.startContainer).parents()) != -1
@@ -25,6 +24,11 @@
       if selection.rangeCount
         range = selection.getRangeAt(0)
         return range if insideComposer(range) && notInsideComponent(range)
+
+    generateId = (type) ->
+      componentIds[type] = 1 unless componentIds[type]?
+      componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']").length != 0
+      "#{type}-#{componentIds[type]}"
 
     execCommand = (command, args)->
       if args? then document.execCommand(command, false, args) else document.execCommand(command)
@@ -61,16 +65,16 @@
       editable.attr('contenteditable', 'true')
 
     changeMode = (element, handler) ->
-      config = element.data('component-config')
+      config = element.data('component-config') || {}
       type = element.data('component-type')
       $(options.configurationSelector, element).each ->
         config[$(this).attr(options.configuration)] = $(this).val()
       component = components[element.data('component-type')]
       element.replaceWith(handler(component, config).data('component-config', config)
-        .attr('data-component-type', type).attr('data-role', 'component'))
+        .attr('data-component-type', type).attr('data-role', 'component')
+        .attr('data-component-id', element.data('component-id')))
 
     editMode = (element) ->
-      self.enable()
       changeMode element, (component, config) ->
         editor = component.editor(options.componentEditorTemplate, config)
         $(options.configurationSelector, editor).each ->
@@ -79,9 +83,11 @@
         editor
 
     previewMode = (element) ->
-      self.disable()
       changeMode element, (component) ->
         component.control()
+
+    init = ->
+      if options.multipleSections then makeComposers(composer) else makeComposer(composer)
 
     this.execCommand = (command, args) ->
       execCommand(command, args) if !disabled && currentRange()?
@@ -91,7 +97,11 @@
       range = currentRange()
       return unless range?
       editor = components[name].editor(options.componentEditorTemplate, {})
-      editor.data('component-config', {}).attr('data-component-type', name).attr('data-role', 'component')
+      editor.data('component-config', {})
+      .attr('data-component-type', name)
+      .attr('data-role', 'component')
+      .attr('data-component-id', generateId(name))
+
       range.insertNode(editor[0])
 
     this.installComponent = (name, component) ->
@@ -99,9 +109,30 @@
 
     this.changeMode = (new_mode) ->
       mode = new_mode
-      handler = if mode == 'edit' then editMode else previewMode
-      composer.find(options.componentSelector).each ->
-        handler($(this))
+      if mode == 'edit'
+        self.enable()
+        composer.find(options.componentSelector).each ->
+          editMode($(this))
+      else
+        self.disable()
+        composer.find(options.componentSelector).each ->
+          previewMode($(this))
+
+    this.getTemplate = (handler) ->
+      template = composer.clone()
+      template.find(options.editableSelector).removeAttr('contenteditable')
+      template.find(options.componentSelector).each ->
+        component = $(this)
+        placeholder = $(options.componentPlaceholder)
+        placeholder.attr('data-component-type', component.data('component-type'))
+        .attr('data-role', 'component').attr('data-component-id', component.data('component-id'))
+        component.replaceWith(placeholder)
+      handler(template.html())
+
+    this.loadContent = (content, mode) ->
+      composer.html(content)
+      init()
+      self.changeMode(mode)
 
     if (options.multipleSections)
       this.insertSection = (template) ->
@@ -110,13 +141,14 @@
         disable(composer.find(options.editableSelector))
       this.enable = ->
         enable(composer.find(options.editableSelector))
-      makeComposers(composer)
     else
       this.disable = ->
         disable(composer)
       this.enable = ->
         enable(composer)
-      makeComposer(composer)
+
+    init()
+    $.fn.honegger.initToolbar composer, toolbar, options
 
   $.fn.honegger = (options)->
     parameters = $.makeArray(arguments).slice(1)
@@ -144,8 +176,8 @@
     multipleSections: true
     editableSelector: '*[data-role="composer"]'
     componentSelector: '*[data-role="component"]'
-    configurationSelector: 'input[data-component-config]'
-    configuration: 'data-component-config'
+    configurationSelector: 'input[data-component-config-key]'
+    configuration: 'data-component-config-key'
     toolbar: '*[data-role="toolbar"]'
     buttons: '*[data-command]'
     buttonCommand: 'data-command'
@@ -160,5 +192,7 @@
       'tab': 'indent'
     componentEditorTemplate: '<table contenteditable="false">' +
     '<thead><tr><td class="component-header"></td></tr></thead>' +
-    '<tbody><tr><td class="component-content"></td></tr></tbody>' + '</table>')(jQuery, document, window)
+    '<tbody><tr><td class="component-content"></td></tr></tbody>' + '</table>'
+    componentPlaceholder: '<div></div>')(jQuery, document, window)
+
 
