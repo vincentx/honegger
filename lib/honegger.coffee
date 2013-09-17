@@ -70,18 +70,6 @@
       .attr('data-component-type', type).attr('data-role', 'component')
       .attr('data-component-id', element.data('component-id')))
 
-    editMode = (element) ->
-      changeMode element, (component, config) ->
-        editor = component.editor(options.componentEditorTemplate, config)
-        $(options.configurationSelector, editor).each ->
-          configElement = $(this)
-          configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
-        editor
-
-    previewMode = (element) ->
-      changeMode element, (component) ->
-        component.control()
-
     init = ->
       if options.multipleSections then makeComposers(composer) else makeComposer(composer)
 
@@ -89,15 +77,8 @@
       execCommand(command, args) if !disabled && currentRange()?
 
     this.insertComponent = (name) ->
-      return unless !disabled && installed.get(name)?
-      range = currentRange()
-      return unless range?
-      editor = installed.get(name).editor(options.componentEditorTemplate, {}).data('component-config', {})
-      .attr('data-component-type', name)
-      .attr('data-role', 'component')
-      .attr('data-component-id', installed.generateId(name))
-
-      range.insertNode(editor[0])
+      return unless !disabled && installed.get(name)? && (range = currentRange())
+      range.insertNode(installed.newComponent(name)[0])
 
     this.installComponent = (name, component) ->
       installed.install(name, component)
@@ -107,11 +88,11 @@
       if mode == 'edit'
         self.enable()
         composer.find(options.componentSelector).each ->
-          editMode($(this))
+          installed.modes[mode]($(this))
       else
         self.disable()
         composer.find(options.componentSelector).each ->
-          previewMode($(this))
+          installed.modes[mode]($(this))
 
     this.getTemplate = (handler) ->
       dataTemplate = {}
@@ -168,10 +149,42 @@
         composer).length != 0
       "#{type}-#{componentIds[type]}"
 
-    generateId: generateId
+    getConfiguration = (element) ->
+      config = element.data('component-config') || {}
+      $(options.configurationSelector, element).each ->
+        config[$(this).attr(options.configuration)] = $(this).val()
+      config
+
+    changeMode = (element, handler) ->
+      type = element.data('component-type')
+      config = getConfiguration(element)
+      component = components[element.data('component-type')]
+      element.replaceWith(handler(component, config).data('component-config', config)
+      .attr('data-component-type', type).attr('data-role', 'component')
+      .attr('data-component-id', element.data('component-id')))
+
+
     install: (name, component) ->
       components[name] = component
-    get: (name) -> components[name]
+    newComponent: (name) ->
+      components[name].editor(options.componentEditorTemplate, {}).data('component-config', {})
+      .attr('data-component-type', name)
+      .attr('data-role', 'component')
+      .attr('data-component-id', generateId(name))
+    modes:
+      edit: (element) ->
+        changeMode element, (component, config) ->
+          editor = component.editor(options.componentEditorTemplate, config)
+          $(options.configurationSelector, editor).each ->
+            configElement = $(this)
+            configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
+          editor
+      control: (element) ->
+        changeMode element, (component) ->
+          component.control()
+
+    get: (name) ->
+      components[name]
 
 
   $.fn.honegger.initToolbar = (composer, toolbar, options) ->
