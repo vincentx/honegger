@@ -62,14 +62,6 @@
         config[$(this).attr(options.configuration)] = $(this).val()
       config
 
-    changeMode = (element, handler) ->
-      type = element.data('component-type')
-      config = getConfiguration(element)
-      component = installed.get(element.data('component-type'))
-      element.replaceWith(handler(component, config).data('component-config', config)
-      .attr('data-component-type', type).attr('data-role', 'component')
-      .attr('data-component-id', element.data('component-id')))
-
     init = ->
       if options.multipleSections then makeComposers(composer) else makeComposer(composer)
 
@@ -155,6 +147,13 @@
         config[$(this).attr(options.configuration)] = $(this).val()
       config
 
+    setConfiguration = (editor, config) ->
+      $(options.configurationSelector, editor).each ->
+        configElement = $(this)
+        configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
+      editor
+
+
     changeMode = (element, handler) ->
       type = element.data('component-type')
       config = getConfiguration(element)
@@ -174,15 +173,10 @@
     modes:
       edit: (element) ->
         changeMode element, (component, config) ->
-          editor = component.editor(options.componentEditorTemplate, config)
-          $(options.configurationSelector, editor).each ->
-            configElement = $(this)
-            configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
-          editor
+          setConfiguration(component.editor(options.componentEditorTemplate, config), config)
       control: (element) ->
         changeMode element, (component) ->
           component.control()
-
     get: (name) ->
       components[name]
 
