@@ -4,9 +4,8 @@
     composer = $(element).data('honegger', this).addClass('honegger-composer')
 
     disabled = false
-    mode = 'edit'
 
-    installed = $.fn.honegger.components(composer, options)
+    components = $.fn.honegger.components(composer, options)
 
     toolbar = if typeof options.toolbar == 'string' then $(options.toolbar) else options.toolbar
 
@@ -48,19 +47,9 @@
         makeComposer($(this))
       element
 
-    disable = (editable) ->
-      disabled = true
-      editable.attr('contenteditable', 'false')
-
-    enable = (editable) ->
-      disabled = false
-      editable.attr('contenteditable', 'true')
-
-    getConfiguration = (element) ->
-      config = element.data('component-config') || {}
-      $(options.configurationSelector, element).each ->
-        config[$(this).attr(options.configuration)] = $(this).val()
-      config
+    enable = (enabled) ->
+      (if options.multipleSections then composer.find(options.editableSelector) else composer).attr('contenteditable',
+        !(disabled = !enabled))
 
     init = ->
       if options.multipleSections then makeComposers(composer) else makeComposer(composer)
@@ -69,28 +58,21 @@
       execCommand(command, args) if !disabled && currentRange()?
 
     this.insertComponent = (name) ->
-      return unless !disabled && installed.get(name)? && (range = currentRange())
-      range.insertNode(installed.newComponent(name)[0])
+      return unless !disabled && components.get(name)? && (range = currentRange())
+      range.insertNode(components.newComponent(name)[0])
 
-    this.installComponent = (name, component) ->
-      installed.install(name, component)
+    this.installComponent = components.install
 
-    this.changeMode = (new_mode) ->
-      mode = new_mode
-      if mode == 'edit'
-        self.enable()
-        composer.find(options.componentSelector).each ->
-          installed.modes[mode]($(this))
-      else
-        self.disable()
-        composer.find(options.componentSelector).each ->
-          installed.modes[mode]($(this))
+    this.changeMode = (mode) ->
+      enable(mode == 'edit')
+      composer.find(options.componentSelector).each ->
+        components.modes[mode]($(this))
 
     this.getTemplate = (handler) ->
       template = composer.clone()
       template.find(options.editableSelector).removeAttr('contenteditable')
 
-      installed.getTemplate template, (dataTemplate, configurations) ->
+      components.getTemplate template, (dataTemplate, configurations) ->
         handler(template.html(), dataTemplate, configurations)
 
     this.loadContent = (content, mode) ->
@@ -98,18 +80,15 @@
       init()
       self.changeMode(mode)
 
+    this.disable = ->
+      enable(false)
+
+    this.enable = ->
+      enable(true)
+
     if (options.multipleSections)
       this.insertSection = (template) ->
         composer.append(makeComposers($(template))) unless disabled
-      this.disable = ->
-        disable(composer.find(options.editableSelector))
-      this.enable = ->
-        enable(composer.find(options.editableSelector))
-    else
-      this.disable = ->
-        disable(composer)
-      this.enable = ->
-        enable(composer)
 
     init()
     $.fn.honegger.initToolbar composer, toolbar, options
@@ -120,72 +99,6 @@
       instance = $.data(this, 'honegger')
       return new Honegger(this, $.extend({}, $.fn.honegger.defaults, options)) unless instance
       instance[options].apply(instance, parameters) if typeof(options) == 'string' && instance[options]?
-
-  $.fn.honegger.components = (composer, options) ->
-    components = {}
-    componentIds = {}
-
-    generateId = (type) ->
-      componentIds[type] = 1 unless componentIds[type]?
-      componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']",
-        composer).length != 0
-      "#{type}-#{componentIds[type]}"
-
-    getConfiguration = (element) ->
-      config = element.data('component-config') || {}
-      $(options.configurationSelector, element).each ->
-        config[$(this).attr(options.configuration)] = $(this).val()
-      config
-
-    setConfiguration = (editor, config) ->
-      $(options.configurationSelector, editor).each ->
-        configElement = $(this)
-        configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
-      editor
-
-
-    changeMode = (element, handler) ->
-      type = element.data('component-type')
-      config = getConfiguration(element)
-      component = components[element.data('component-type')]
-      element.replaceWith(handler(component, config).data('component-config', config)
-      .attr('data-component-type', type).attr('data-role', 'component')
-      .attr('data-component-id', element.data('component-id')))
-
-
-    install: (name, component) ->
-      components[name] = component
-    newComponent: (name) ->
-      components[name].editor(options.componentEditorTemplate, {}).data('component-config', {})
-      .attr('data-component-type', name)
-      .attr('data-role', 'component')
-      .attr('data-component-id', generateId(name))
-    modes:
-      edit: (element) ->
-        changeMode element, (component, config) ->
-          setConfiguration(component.editor(options.componentEditorTemplate, config), config)
-      control: (element) ->
-        changeMode element, (component) ->
-          component.control()
-
-    getTemplate: (template, handler)->
-      dataTemplate = {}
-      configurations = {}
-      template.find(options.componentSelector).each ->
-        component = $(this)
-        id = component.data('component-id')
-        type = component.data('component-type')
-        placeholder = $(options.componentPlaceholder)
-        placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
-        .data('component-config')
-        dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
-        configurations[id] = getConfiguration(component)
-        component.replaceWith(placeholder)
-      handler(dataTemplate, configurations)
-
-    get: (name) ->
-      components[name]
-
 
   $.fn.honegger.initToolbar = (composer, toolbar, options) ->
     $(options.buttons, toolbar).each ->
