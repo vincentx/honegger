@@ -87,21 +87,11 @@
           installed.modes[mode]($(this))
 
     this.getTemplate = (handler) ->
-      dataTemplate = {}
-      configurations = {}
       template = composer.clone()
       template.find(options.editableSelector).removeAttr('contenteditable')
-      template.find(options.componentSelector).each ->
-        component = $(this)
-        id = component.data('component-id')
-        type = component.data('component-type')
-        placeholder = $(options.componentPlaceholder)
-        placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
-        .data('component-config')
-        dataTemplate[id] = $.extend(true, {}, installed.get(type).dataTemplate)
-        configurations[id] = getConfiguration(component)
-        component.replaceWith(placeholder)
-      handler(template.html(), dataTemplate, configurations)
+
+      installed.getTemplate template, (dataTemplate, configurations) ->
+        handler(template.html(), dataTemplate, configurations)
 
     this.loadContent = (content, mode) ->
       composer.html(content)
@@ -177,6 +167,22 @@
       control: (element) ->
         changeMode element, (component) ->
           component.control()
+
+    getTemplate: (template, handler)->
+      dataTemplate = {}
+      configurations = {}
+      template.find(options.componentSelector).each ->
+        component = $(this)
+        id = component.data('component-id')
+        type = component.data('component-type')
+        placeholder = $(options.componentPlaceholder)
+        placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
+        .data('component-config')
+        dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
+        configurations[id] = getConfiguration(component)
+        component.replaceWith(placeholder)
+      handler(dataTemplate, configurations)
+
     get: (name) ->
       components[name]
 
