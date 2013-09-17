@@ -1,10 +1,8 @@
 (($, document, window) ->
   Honegger = (element, options) ->
     self = this
-    composer = $(element).data('honegger', this).addClass('honegger-composer')
-
     disabled = false
-
+    composer = $(element).data('honegger', this).addClass('honegger-composer')
     components = $.fn.honegger.components(composer, options)
 
     toolbar = if typeof options.toolbar == 'string' then $(options.toolbar) else options.toolbar

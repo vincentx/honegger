@@ -21,23 +21,20 @@
         configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
       editor
 
+    config = (target, id, type, config) ->
+      target.data('component-config', config)
+      .attr('data-component-type', type).attr('data-role', 'component')
+      .attr('data-component-id', id)
 
     changeMode = (element, handler) ->
-      type = element.data('component-type')
-      config = getConfiguration(element)
-      component = components[element.data('component-type')]
-      element.replaceWith(handler(component, config).data('component-config', config)
-      .attr('data-component-type', type).attr('data-role', 'component')
-      .attr('data-component-id', element.data('component-id')))
-
+      configuration = getConfiguration(element)
+      element.replaceWith(config(handler(components[element.data('component-type')], configuration),
+        element.data('component-id'), element.data('component-type'), config))
 
     install: (name, component) ->
       components[name] = component
     newComponent: (name) ->
-      components[name].editor(options.componentEditorTemplate, {}).data('component-config', {})
-      .attr('data-component-type', name)
-      .attr('data-role', 'component')
-      .attr('data-component-id', generateId(name))
+      config(components[name].editor(options.componentEditorTemplate, {}), generateId(name), name, {})
     modes:
       edit: (element) ->
         changeMode element, (component, config) ->
@@ -53,14 +50,10 @@
         component = $(this)
         id = component.data('component-id')
         type = component.data('component-type')
-        placeholder = $(options.componentPlaceholder)
-        placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
-        .data('component-config')
         dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
         configurations[id] = getConfiguration(component)
-        component.replaceWith(placeholder)
+        component.replaceWith(config($(options.componentPlaceholder), id, type, {}))
       handler(dataTemplate, configurations)
 
     get: (name) ->
-      components[name]
-)(jQuery)
+      components[name])(jQuery)
