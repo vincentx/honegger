@@ -1,15 +1,13 @@
 (($, document, window) ->
   Honegger = (element, options) ->
     self = this
-    composer = $(element)
     components = {}
+    composer = $(element).data('honegger', this).addClass('honegger-composer')
 
     disabled = false
     mode = 'edit'
-    componentIds = {}
 
-    composer.data('honegger', this)
-    composer.addClass('honegger-composer')
+    installed = $.fn.honegger.components(composer, options)
 
     toolbar = if typeof options.toolbar == 'string' then $(options.toolbar) else options.toolbar
 
@@ -24,11 +22,6 @@
       if selection.rangeCount
         range = selection.getRangeAt(0)
         return range if insideComposer(range) && notInsideComponent(range)
-
-    generateId = (type) ->
-      componentIds[type] = 1 unless componentIds[type]?
-      componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']").length != 0
-      "#{type}-#{componentIds[type]}"
 
     execCommand = (command, args)->
       if args? then document.execCommand(command, false, args) else document.execCommand(command)
@@ -75,8 +68,8 @@
       config = getConfiguration(element)
       component = components[element.data('component-type')]
       element.replaceWith(handler(component, config).data('component-config', config)
-        .attr('data-component-type', type).attr('data-role', 'component')
-        .attr('data-component-id', element.data('component-id')))
+      .attr('data-component-type', type).attr('data-role', 'component')
+      .attr('data-component-id', element.data('component-id')))
 
     editMode = (element) ->
       changeMode element, (component, config) ->
@@ -100,11 +93,10 @@
       return unless !disabled && components[name]?
       range = currentRange()
       return unless range?
-      editor = components[name].editor(options.componentEditorTemplate, {})
-      editor.data('component-config', {})
+      editor = components[name].editor(options.componentEditorTemplate, {}).data('component-config', {})
       .attr('data-component-type', name)
       .attr('data-role', 'component')
-      .attr('data-component-id', generateId(name))
+      .attr('data-component-id', installed.generateId(name))
 
       range.insertNode(editor[0])
 
@@ -133,7 +125,7 @@
         type = component.data('component-type')
         placeholder = $(options.componentPlaceholder)
         placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
-                  .data('component-config')
+        .data('component-config')
         dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
         configurations[id] = getConfiguration(component)
         component.replaceWith(placeholder)
@@ -166,6 +158,18 @@
       instance = $.data(this, 'honegger')
       return new Honegger(this, $.extend({}, $.fn.honegger.defaults, options)) unless instance
       instance[options].apply(instance, parameters) if typeof(options) == 'string' && instance[options]?
+
+  $.fn.honegger.components = (composer, options) ->
+    componentIds = {}
+
+    generateId = (type) ->
+      componentIds[type] = 1 unless componentIds[type]?
+      componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']",
+        composer).length != 0
+      "#{type}-#{componentIds[type]}"
+
+    generateId: generateId
+
 
   $.fn.honegger.initToolbar = (composer, toolbar, options) ->
     $(options.buttons, toolbar).each ->
