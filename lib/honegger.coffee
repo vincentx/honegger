@@ -1,7 +1,6 @@
 (($, document, window) ->
   Honegger = (element, options) ->
     self = this
-    components = {}
     composer = $(element).data('honegger', this).addClass('honegger-composer')
 
     disabled = false
@@ -66,7 +65,7 @@
     changeMode = (element, handler) ->
       type = element.data('component-type')
       config = getConfiguration(element)
-      component = components[element.data('component-type')]
+      component = installed.get(element.data('component-type'))
       element.replaceWith(handler(component, config).data('component-config', config)
       .attr('data-component-type', type).attr('data-role', 'component')
       .attr('data-component-id', element.data('component-id')))
@@ -90,10 +89,10 @@
       execCommand(command, args) if !disabled && currentRange()?
 
     this.insertComponent = (name) ->
-      return unless !disabled && components[name]?
+      return unless !disabled && installed.get(name)?
       range = currentRange()
       return unless range?
-      editor = components[name].editor(options.componentEditorTemplate, {}).data('component-config', {})
+      editor = installed.get(name).editor(options.componentEditorTemplate, {}).data('component-config', {})
       .attr('data-component-type', name)
       .attr('data-role', 'component')
       .attr('data-component-id', installed.generateId(name))
@@ -101,7 +100,7 @@
       range.insertNode(editor[0])
 
     this.installComponent = (name, component) ->
-      components[name] = component
+      installed.install(name, component)
 
     this.changeMode = (new_mode) ->
       mode = new_mode
@@ -126,7 +125,7 @@
         placeholder = $(options.componentPlaceholder)
         placeholder.attr('data-component-type', type).attr('data-role', 'component').attr('data-component-id', id)
         .data('component-config')
-        dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
+        dataTemplate[id] = $.extend(true, {}, installed.get(type).dataTemplate)
         configurations[id] = getConfiguration(component)
         component.replaceWith(placeholder)
       handler(template.html(), dataTemplate, configurations)
@@ -160,6 +159,7 @@
       instance[options].apply(instance, parameters) if typeof(options) == 'string' && instance[options]?
 
   $.fn.honegger.components = (composer, options) ->
+    components = {}
     componentIds = {}
 
     generateId = (type) ->
@@ -169,6 +169,9 @@
       "#{type}-#{componentIds[type]}"
 
     generateId: generateId
+    install: (name, component) ->
+      components[name] = component
+    get: (name) -> components[name]
 
 
   $.fn.honegger.initToolbar = (composer, toolbar, options) ->
