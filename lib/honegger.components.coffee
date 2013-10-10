@@ -33,8 +33,8 @@
 
     install: (name, component) ->
       components[name] = component
-    newComponent: (name) ->
-      config(components[name].editor(options.componentEditorTemplate, {}), generateId(name), name, {})
+    newComponent: (name, config) ->
+      config(components[name].editor(options.componentEditorTemplate, config), generateId(name), name, config)
     modes:
       edit: (element) ->
         changeMode element, (component, config) ->
