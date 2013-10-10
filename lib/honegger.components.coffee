@@ -29,7 +29,7 @@
     changeMode = (element, handler) ->
       configuration = getConfiguration(element)
       element.replaceWith(config(handler(components[element.data('component-type')], configuration),
-        element.data('component-id'), element.data('component-type'), config))
+        element.data('component-id'), element.data('component-type'), configuration))
 
     install: (name, component) ->
       components[name] = component
@@ -42,7 +42,10 @@
       control: (element) ->
         changeMode element, (component) ->
           component.control()
-
+    setConfiguration: (configuration)->
+      $('*[data-role="component"]', composer).each ->
+        component = $(this)
+        component.data('component-config', configuration[component.data('component-id')])
     getTemplate: (template, handler)->
       dataTemplate = {}
       configurations = {}
@@ -54,6 +57,5 @@
         configurations[id] = getConfiguration(component)
         component.replaceWith(config($(options.componentPlaceholder), id, type, {}))
       handler(dataTemplate, configurations)
-
     get: (name) ->
       components[name])(jQuery)

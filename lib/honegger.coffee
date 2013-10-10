@@ -49,7 +49,7 @@
       (if options.multipleSections then composer.find(options.editableSelector) else composer).attr('contenteditable',
         !(disabled = !enabled))
 
-    init = ->
+    initComposer = ->
       if options.multipleSections then makeComposers(composer) else makeComposer(composer)
 
     this.execCommand = (command, args) ->
@@ -73,9 +73,10 @@
       components.getTemplate template, (dataTemplate, configurations) ->
         handler(template.html(), dataTemplate, configurations)
 
-    this.loadContent = (content, mode) ->
+    this.loadContent = (content, mode, configuration) ->
       composer.html(content)
-      init()
+      components.setConfiguration(configuration)
+      initComposer()
       self.changeMode(mode)
 
     this.disable = ->
@@ -88,7 +89,7 @@
       this.insertSection = (template) ->
         composer.append(makeComposers($(template))) unless disabled
 
-    init()
+    initComposer()
     $.fn.honegger.initToolbar composer, toolbar, options
 
   $.fn.honegger = (options)->
