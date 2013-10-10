@@ -55,9 +55,9 @@
     this.execCommand = (command, args) ->
       execCommand(command, args) if !disabled && currentRange()?
 
-    this.insertComponent = (name) ->
+    this.insertComponent = (name, config = {}) ->
       return unless !disabled && components.get(name)? && (range = currentRange())
-      range.insertNode(components.newComponent(name)[0])
+      range.insertNode(components.newComponent(name, config)[0])
 
     this.installComponent = components.install
 
