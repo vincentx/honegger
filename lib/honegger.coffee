@@ -67,11 +67,8 @@
         components.modes[mode]($(this))
 
     this.getTemplate = (handler) ->
-      template = composer.clone()
-      template.find(options.editableSelector).removeAttr('contenteditable')
-
-      components.getTemplate template, (dataTemplate, configurations) ->
-        handler(template.html(), dataTemplate, configurations)
+      components.getTemplate composer, (html, dataTemplate, configurations) ->
+        handler(html, dataTemplate, configurations)
 
     this.loadContent = (content, mode, configuration) ->
       composer.html(content)
@@ -118,7 +115,7 @@
     multipleSections: true
     editableSelector: '*[data-role="composer"]'
     componentSelector: '*[data-role="component"]'
-    configurationSelector: 'input[data-component-config-key]'
+    configurationSelector: '*[data-component-config-key]'
     configuration: 'data-component-config-key'
     toolbar: '*[data-role="toolbar"]'
     buttons: '*[data-command]'

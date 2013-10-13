@@ -12,13 +12,24 @@
     getConfiguration = (element) ->
       config = element.data('component-config') || {}
       $(options.configurationSelector, element).each ->
-        config[$(this).attr(options.configuration)] = $(this).val()
+        configElement = $(this)
+        key = configElement.attr(options.configuration)
+        if key.indexOf('.') != -1
+          struct = config
+          for field in key.split('.')
+            struct[field] = {} unless struct[field]?
+            struct = struct[field]
+          eval("config.#{key} = configElement.val()")
+        else
+          config[key] = configElement.val()
       config
 
     setConfiguration = (editor, config) ->
       $(options.configurationSelector, editor).each ->
         configElement = $(this)
-        configElement.val(config[configElement.attr(options.configuration)]) if configElement.attr(options.configuration)?
+        key = configElement.attr(options.configuration)
+        value = if key.indexOf('.') != -1 then eval("config.#{key}") else config[key]
+        configElement.val(value) if value?
       editor
 
     config = (target, id, type, config) ->
@@ -33,8 +44,10 @@
 
     install: (name, component) ->
       components[name] = component
-    newComponent: (name, config) ->
-      config(components[name].editor(options.componentEditorTemplate, config), generateId(name), name, config)
+    newComponent: (name, component_config) ->
+      setConfiguration(config(components[name].editor(options.componentEditorTemplate, component_config),
+        generateId(name), name,
+        component_config), component_config)
     modes:
       edit: (element) ->
         changeMode element, (component, config) ->
@@ -43,7 +56,7 @@
         changeMode element, (component) ->
           component.control()
     setConfiguration: (configuration)->
-      $('*[data-role="component"]', composer).each ->
+      $(options.componentSelector, composer).each ->
         component = $(this)
         component.data('component-config', configuration[component.data('component-id')])
     getTemplate: (template, handler)->
@@ -55,7 +68,13 @@
         type = component.data('component-type')
         dataTemplate[id] = $.extend(true, {}, components[type].dataTemplate)
         configurations[id] = getConfiguration(component)
+      page = template.clone()
+      page.find(options.editableSelector).removeAttr('contenteditable')
+      page.find(options.componentSelector).each ->
+        component = $(this)
+        id = component.data('component-id')
+        type = component.data('component-type')
         component.replaceWith(config($(options.componentPlaceholder), id, type, {}))
-      handler(dataTemplate, configurations)
+      handler(page.html(), dataTemplate, configurations)
     get: (name) ->
       components[name])(jQuery)
