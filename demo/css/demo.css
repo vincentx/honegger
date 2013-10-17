@@ -1,0 +1,81 @@
+body {
+    padding: 10px;
+}
+
+#composer {
+    margin-top: 60px;
+    min-height: 600px;
+}
+
+.section-block {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 4px 2px;
+}
+
+.section-column {
+    display: table-cell;
+    padding: 4px;
+    height: 32px;
+    background-color: #fff;
+}
+
+.section-sidebar {
+    width: 29.9%;
+}
+
+.edit .section-column, .layout .section-column {
+    border: 2px dashed rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.edit .section-column:focus,  .layout .section-column:focus{
+    border-color: #444;
+}
+
+*[contenteditable=true] {
+    background: rgba(0, 0, 0, 0); /* transparent bg */
+    resize: none;
+}
+
+*[contenteditable=true]:focus, *[contenteditable=true]:hover {
+    outline: none;
+}
+
+.layout .section-block, .layout .section-column {
+    cursor: move;
+}
+
+table[data-role=component] {
+    border: 2px solid #aaa;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 4px;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+table[data-role=component] thead {
+    color: #fff;
+    font-weight: bold;
+    background-color: #aaa;
+}
+table[data-role=component] thead td {
+    padding: 5px 10px;
+}
+table[data-role=component] tbody .component-content {
+    padding: 10px;
+}
+table[data-role=component] tbody div.form-group > div {
+    line-height: 34px;
+}
+table[data-role=component] tbody div.form-group > div input[type=checkbox] + label:before {
+    top: 8px;
+}
+table[data-role=component] tbody div.form-group > div input[type=checkbox] + label:after {
+    top: 0px;
+}
+table[data-role=component] tbody div.form-group:last-child {
+    margin-bottom: 0;
+}
+

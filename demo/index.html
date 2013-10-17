@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/demo.css" rel="stylesheet">
+    <script src="../vendor/jquery-2.0.3.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="../vendor/jquery.hotkeys.js"></script>
+    <script src="../lib/honegger.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/demo.js"></script>
+</head>
+<body>
+</body>
+<header class="navbar navbar-fixed-top" id="composer-toolbar" role="navigation">
+    <div class="btn-group">
+        <button class="btn btn-default navbar-btn" data-command="bold"><i class="icon-bold"></i></button>
+        <button class="btn btn-default navbar-btn" data-command="italic"><i class="icon-italic"></i></button>
+        <button class="btn btn-default navbar-btn" data-command="strikethrough"><i class="icon-strikethrough"></i>
+        </button>
+        <button class="btn btn-default navbar-btn" data-command="underline"><i class="icon-underline"></i></button>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-default navbar-btn" data-command="insertunorderedlist"><i class="icon-list-ul"></i>
+        </button>
+        <button class="btn btn-default navbar-btn" data-command="insertorderedlist"><i class="icon-list-ol"></i>
+        </button>
+        <button class="btn btn-default navbar-btn" data-command="indent"><i class="icon-indent-right"></i></button>
+        <button class="btn btn-default navbar-btn" data-command="outdent"><i class="icon-indent-left"></i></button>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-default navbar-btn" data-command="justifyleft"><i class="icon-align-left"></i></button>
+        <button class="btn btn-default navbar-btn" data-command="justifycenter"><i class="icon-align-center"></i>
+        </button>
+        <button class="btn btn-default navbar-btn" data-command="justifyright"><i class="icon-align-right"></i></button>
+        <button class="btn btn-default navbar-btn" data-command="justifyfull"><i class="icon-align-justify"></i>
+        </button>
+    </div>
+    <div class="btn-group dropdown">
+        <button class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-columns"></i>&nbsp; <span class="caret"></span></button>
+        <ul class="dropdown-menu long-menu" role="menu">
+            <li><a href="#" class="add-section" data-target=".single">
+                <i class="icon-plus"></i>Single Column</a>
+            </li>
+            <li><a href="#" class="add-section" data-target=".two-equal">
+                <i class="icon-plus"></i>2 Columns</a>
+            </li>
+            <li><a href="#" class="add-section" data-target=".left-sidebar">
+                <i class="icon-plus"></i>2 Columns with left sidebar</a></li>
+            <li><a href="#" class="add-section" data-target=".right-sidebar">
+                <i class="icon-plus"></i>2 Columns with right sidebar</a></li>
+            <li><a href="#" class="add-section" data-target=".three-equal">
+                <i class="icon-plus"></i>3 Columns</a>
+            </li>
+            <li><a href="#" class="add-section" data-target=".two-sidebars">
+                <i class="icon-plus"></i>3 Columns with 2 sidebars</a></li>
+        </ul>
+    </div>
+
+    <div class="btn-group dropdown">
+        <button class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-cogs"></i>&nbsp; <span class="caret"></span></button>
+        <ul class="dropdown-menu long-menu" role="menu">
+            <li><a href="#" class="add-component" data-target="textbox"><i class="icon-plus"></i> Text area</a></li>
+        </ul>
+    </div>
+
+    <div class="btn-group pull-right mode">
+        <button class="btn btn-default navbar-btn change-mode" data-target="#section-composer" data-mode="edit">
+            <i class="icon-pencil"></i></button>
+        <button class="btn btn-default navbar-btn change-mode" data-target="#section-composer" data-mode="layout">
+            <i class="icon-edit"></i></button>
+        <button class="btn btn-default navbar-btn change-mode" data-target="#section-composer" data-mode="control">
+            <i class="icon-eye-open"></i></button>
+    </div>
+</header>
+
+<article class="edit" id="template">
+    <div id="composer">
+        <div class="section-block single-block">
+            <div class="section-column"></div>
+        </div>
+    </div>
+</article>
+
+<ul class="hidden" id="column-templates">
+    <li class="single">
+        <div class="section-block single-block">
+            <div class="section-column"></div>
+        </div>
+    </li>
+    <li class="two-equal">
+        <div class="section-block">
+            <div class="section-column"></div>
+            <div class="section-column"></div>
+        </div>
+    </li>
+    <li class="left-sidebar">
+        <div class="section-block">
+            <div class="section-column section-sidebar"></div>
+            <div class="section-column"></div>
+        </div>
+    </li>
+    <li class="right-sidebar">
+        <div class="section-block">
+            <div class="section-column"></div>
+            <div class="section-column section-sidebar"></div>
+        </div>
+    </li>
+    <li class="three-equal">
+        <div class="section-block">
+            <div class="section-column"></div>
+            <div class="section-column"></div>
+            <div class="section-column"></div>
+        </div>
+    </li>
+    <li class="two-sidebars">
+        <div class="section-block">
+            <div class="section-column section-sidebar"></div>
+            <div class="section-column"></div>
+            <div class="section-column section-sidebar"></div>
+        </div>
+    </li>
+</ul>
+</html>
