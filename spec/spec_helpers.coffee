@@ -4,6 +4,10 @@ select = (selector, element) ->
   $(selector).append($(element))
   window.getSelection().setPosition($('.selection', $(selector))[0], 1)
 
+select_column = (selector, element) ->
+  $(selector).honegger("insertSection", element)
+  window.getSelection().setPosition($('.selection', $(selector))[0], 1)
+
 press = (e)->
   selection = window.getSelection()
   if selection.getRangeAt? && selection.rangeCount
@@ -50,12 +54,11 @@ $inside = '.inside'
 $outside = '.outside'
 $inside_component = '.component-inside'
 
-$editable = {
+$editable =
   paragraph: read('_editable_paragraph.html')
-}
+  column: read('_editable_column.html')
 
-$components = {
+$components =
   text: read('_text_component.html')
-}
 
 $tab = 9
