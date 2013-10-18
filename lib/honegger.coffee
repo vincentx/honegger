@@ -61,10 +61,10 @@
 
     this.installComponent = components.install
 
-    this.changeMode = (mode) ->
+    this.changeMode = (mode, config) ->
       enable(mode == 'edit')
       composer.find(options.componentSelector).each ->
-        components.modes[mode]($(this))
+        components.modes[mode]($(this), config)
 
     this.getTemplate = (handler) ->
       components.getTemplate composer, (html, dataTemplate, configurations) ->

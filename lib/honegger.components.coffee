@@ -49,12 +49,12 @@
         generateId(name), name,
         component_config), component_config)
     modes:
-      edit: (element) ->
+      edit: (element, config) ->
         changeMode element, (component, config) ->
           setConfiguration(component.editor(options.componentEditorTemplate, config), config)
-      control: (element) ->
+      control: (element, config) ->
         changeMode element, (component) ->
-          component.control()
+          component.control(config[element.data('component-id')])
     setConfiguration: (configuration)->
       $(options.componentSelector, composer).each ->
         component = $(this)

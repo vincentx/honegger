@@ -8,8 +8,9 @@ describe 'components in different mode', ->
       editor
     dataTemplate:
       content: ''
-    control: () ->
-      $('<div>\n<textarea class=\"component-control\" data-template-field=\"content\"></textarea>\n<div>\n')
+    control: (config) ->
+      value = if(config?) then config["mode"] else "NA"
+      $('<div>\n<textarea class=\"component-control\" data-template-field=\"content\" data-config="' + value + '"></textarea>\n<div>\n')
 
   beforeEach ->
     loadFixtures('component-mode.html')
@@ -34,11 +35,17 @@ describe 'components in different mode', ->
 
   it 'should be able to change form editor to control mode', ->
     context.composer.honegger("insertComponent", "textarea", {})
-    context.composer.honegger("changeMode", "control")
+    context.composer.honegger("changeMode", "control", {})
     expect(context.composer).toBeInControlMode()
 
   it 'should be able to change form control to editor mode', ->
     context.composer.honegger("insertComponent", "textarea", {})
-    context.composer.honegger("changeMode", "control")
-    context.composer.honegger("changeMode", "edit")
+    context.composer.honegger("changeMode", "control", {})
+    context.composer.honegger("changeMode", "edit", {})
     expect(context.composer).toBeInEditMode()
+
+  it 'should be able to pass configuration to control mode', ->
+    context.composer.honegger("insertComponent", "textarea", {})
+    context.composer.honegger("changeMode", "control", {"textarea-1": {mode: "readonly"}})
+    expect(context.composer).toBeInControlMode()
+    expect($(".component-control").data("config")).toBe("readonly")
