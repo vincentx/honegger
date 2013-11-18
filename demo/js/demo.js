@@ -12,7 +12,7 @@ $(function () {
 
         if (mode != 'layout') {
             disableLayoutMode(composer);
-            composer.honegger('changeMode', mode);
+            composer.honegger('changeMode', mode, {});
         } else {
             composer.honegger('disable');
             enableLayoutMode(composer);
