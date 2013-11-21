@@ -45,8 +45,10 @@
     install: (name, component) ->
       components[name] = component
     newComponent: (name, component_config) ->
+      component_id = generateId(name)
+      component_config = $.extend(true, {component_id: component_id}, component_config)
       setConfiguration(config(components[name].editor(options.componentEditorTemplate, component_config),
-        generateId(name), name,
+        component_id, name,
         component_config), component_config)
     modes:
       edit: (element, config) ->
