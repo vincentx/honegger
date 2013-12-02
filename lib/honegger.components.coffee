@@ -19,17 +19,23 @@
           for field in key.split('.')
             struct[field] = {} unless struct[field]?
             struct = struct[field]
-          eval("config.#{key} = configElement.val()")
+          eval("config.#{key} = getConfigElementValue(configElement)")
         else
-          config[key] = configElement.val()
+          config[key] = getConfigElementValue(configElement)
       config
+
+    getConfigElementValue = (configElement) ->
+      if configElement.attr('type') == 'checkbox' then configElement.is(':checked') else configElement.val();
+
+    setConfigElementValue = (configElement, value) ->
+      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value == 'true') else configElement.val(value)
 
     setConfiguration = (editor, config) ->
       $(options.configurationSelector, editor).each ->
         configElement = $(this)
         key = configElement.attr(options.configuration)
         value = if key.indexOf('.') != -1 then eval("config.#{key}") else config[key]
-        configElement.val(value) if value?
+        setConfigElementValue(configElement, value) if value?
       editor
 
     config = (target, id, type, config) ->
