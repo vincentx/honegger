@@ -28,7 +28,7 @@
       if configElement.attr('type') == 'checkbox' then configElement.is(':checked') else configElement.val();
 
     setConfigElementValue = (configElement, value) ->
-      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value == 'true') else configElement.val(value)
+      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
 
     setConfiguration = (editor, config) ->
       $(options.configurationSelector, editor).each ->
