@@ -20,8 +20,10 @@
             struct[field] = {} unless struct[field]?
             struct = struct[field]
           eval("config.#{key} = getConfigElementValue(configElement)")
+          return
         else
           config[key] = getConfigElementValue(configElement)
+          return
       config
 
     getConfigElementValue = (configElement) ->
