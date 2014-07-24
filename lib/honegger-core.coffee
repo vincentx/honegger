@@ -1,30 +1,35 @@
 (($) ->
-  Honegger = (element, options) ->
-    composer = $(element)
+  ComposerMode = (composer, api, spi, options) ->
     modes = {}
     current = undefined
 
-    enableFeatures = ->
-      spi =
-        mode: (name, handler) ->
-          modes[name] = [] unless modes[name]
-          modes[name].push(handler)
+    spi.mode = (name, handler) ->
+      modes[name] = [] unless modes[name]
+      modes[name].push(handler)
 
-      feature(spi) for name, feature of options.features
-
-    changeMode = (mode) ->
+    api.modes = ->
+      name for name of modes
+    api.changeMode = (mode) ->
       $.error("no such mode #{mode}") unless modes[mode]
 
-      ($.each modes[current], -> this.off(composer)) if current && modes[current]
-      $.each modes[mode], -> this.on(composer)
+      ($.each modes[current], ->
+        this.off(composer)) if current && modes[current]
+      $.each modes[mode], ->
+        this.on(composer)
       current = mode
 
-    enableFeatures()
-    changeMode(options.defaultMode)
+    return -> api.changeMode(options.defaultMode)
 
-    modes: -> name for name of modes
-    changeMode: changeMode
+  Honegger = (element, options) ->
+    composer = $(element)
+    api = {}
+    spi = {}
 
+    installed = options.extensionPoints.map (install) -> install(composer, api, spi, options)
+    feature(spi) for name, feature of options.features
+    init() for init in installed
+
+    return api
 
   $.fn.honegger = (options)->
     isMethodCall = typeof(options) == 'string'
@@ -46,6 +51,6 @@
     this.each if isMethodCall then methodCall else initComponent
     returnValue
 
-  $.fn.honegger.features = {}
-  $.fn.honegger.defaults = {}
-)(jQuery);
+  $.fn.honegger.defaults = {
+    extensionPoints: [ComposerMode]
+  })(jQuery);
