@@ -2,16 +2,28 @@
   Honegger = (element, options) ->
     composer = $(element)
     modes = {}
+    current = undefined
 
-    spi =
-      mode: (name, handler) ->
-        modes[name] = handler
+    enableFeatures = ->
+      spi =
+        mode: (name, handler) ->
+          modes[name] = [] unless modes[name]
+          modes[name].push(handler)
 
-    feature(spi) for name, feature of options.features
+      feature(spi) for name, feature of options.features
 
-    modes: ->
-      name for name of modes
-    changeMode: (mode) ->
+    changeMode = (mode) ->
+      $.error("no such mode #{mode}") unless modes[mode]
+
+      ($.each modes[current], -> this.off(composer)) if current && modes[current]
+      $.each modes[mode], -> this.on(composer)
+      current = mode
+
+    enableFeatures()
+    changeMode(options.defaultMode)
+
+    modes: -> name for name of modes
+    changeMode: changeMode
 
 
   $.fn.honegger = (options)->
@@ -35,4 +47,5 @@
     returnValue
 
   $.fn.honegger.features = {}
-  $.fn.honegger.defaults = {})(jQuery);
+  $.fn.honegger.defaults = {}
+)(jQuery);

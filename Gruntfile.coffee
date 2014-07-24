@@ -10,7 +10,7 @@ module.exports = (grunt) ->
           'build/honegger-shared-spec.js': ['spec/should_*.coffee']
       compile:
         files:
-          'build/honegger-spec.js': ['spec/composer_features_spec.coffee']
+          'build/honegger-spec.js': ['spec/composer_mode_extension_point_spec.coffee']
     jasmine:
       src: 'lib/**/*.js'
       options:
