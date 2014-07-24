@@ -13,7 +13,6 @@
         setConfigElementValue(configElement, value) if value?
       editor
 
-
     extensionPoints: ->
       spi.installComponent = (name, component) ->
         components[name] = component
