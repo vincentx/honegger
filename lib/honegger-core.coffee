@@ -1,5 +1,5 @@
 (($) ->
-  ComposerMode = (composer, api, spi, options) ->
+  ComposingMode = (composer, api, spi, options) ->
     modes = {}
     current = undefined
 
@@ -7,8 +7,8 @@
       modes[name] = [] unless modes[name]
       modes[name].push(handler)
 
-    api.modes = ->
-      name for name of modes
+    api.mode = -> current
+    api.modes = -> name for name of modes
     api.changeMode = (mode) ->
       $.error("no such mode #{mode}") unless modes[mode]
 
@@ -27,7 +27,7 @@
 
     installed = options.extensionPoints.map (install) -> install(composer, api, spi, options)
     feature(spi) for name, feature of options.features
-    init() for init in installed
+    initialize() for initialize in installed
 
     return api
 
@@ -52,5 +52,5 @@
     returnValue
 
   $.fn.honegger.defaults = {
-    extensionPoints: [ComposerMode]
+    extensionPoints: [ComposingMode]
   })(jQuery);
