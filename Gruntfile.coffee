@@ -5,12 +5,12 @@ module.exports = (grunt) ->
         options:
           bare: true
         files:
-          'lib/honegger.js': ['lib/**/*.coffee']
+          'lib/honegger.js': ['lib/honegger-core.coffee', 'lib/honegger-layout.coffee']
           'build/honegger-spec-helpers.js': ['spec/spec_helpers.coffee']
           'build/honegger-shared-spec.js': ['spec/should_*.coffee']
       compile:
         files:
-          'build/honegger-spec.js': ['spec/*_spec.coffee']
+          'build/honegger-spec.js': ['spec/composer_features_spec.coffee']
     jasmine:
       src: 'lib/**/*.js'
       options:

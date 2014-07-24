@@ -1,7 +1,7 @@
 {
   "name": "honegger",
-  "version": "0.1.0",
-  "description": "Yet another rich text composer",
+  "version": "0.2.0",
+  "description": "A structural page editor",
   "author": "Vincent Xu",
   "license": "BSD",
   "devDependencies": {
