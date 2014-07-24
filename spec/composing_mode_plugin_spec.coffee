@@ -16,7 +16,7 @@ describe 'composing mode extension point', ->
               off: ->
       ]
 
-    expect(composer.honegger('modes')).toEqual(['test'])
+    expect('test' in composer.honegger('modes')).toBeTruthy()
 
   it 'should turn default composing mode on when composer initializing', ->
     handler = on: jasmine.createSpy(), off: jasmine.createSpy()
@@ -85,8 +85,8 @@ describe 'composing mode extension point', ->
               off: ->
             spi.mode 'modeB',
               on: ->
-                off: ->
+              off: ->
       ]
-      
+
     composer.honegger('changeMode', 'modeB')
     expect(composer.honegger('mode')).toEqual('modeB')
