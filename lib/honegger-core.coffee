@@ -3,31 +3,31 @@
     modes = {}
     current = undefined
 
-    spi.mode = (name, handler) ->
-      modes[name] = [] unless modes[name]
-      modes[name].push(handler)
+    extensionPoints: ->
+      spi.mode = (name, handler) ->
+        modes[name] = [] unless modes[name]
+        modes[name].push(handler)
+      api.mode = -> current
+      api.modes = -> name for name of modes
+      api.changeMode = (mode) ->
+        $.error("no such mode #{mode}") unless modes[mode]
 
-    api.mode = -> current
-    api.modes = -> name for name of modes
-    api.changeMode = (mode) ->
-      $.error("no such mode #{mode}") unless modes[mode]
-
-      ($.each modes[current], ->
-        this.off(composer)) if current && modes[current]
-      $.each modes[mode], ->
-        this.on(composer)
-      current = mode
-
-    return -> api.changeMode(options.defaultMode)
+        ($.each modes[current], -> this.off(composer)) if current && modes[current]
+        $.each modes[mode], -> this.on(composer)
+        current = mode
+    initialize: ->
+      api.changeMode(options.defaultMode)
 
   Honegger = (element, options) ->
     composer = $(element)
     api = {}
     spi = {}
 
-    installed = options.extensionPoints.map (install) -> install(composer, api, spi, options)
-    feature(spi) for name, feature of options.features
-    initialize() for initialize in installed
+    plugins = options.plugins.concat(options.extraPlugins).map (plugin) -> plugin(composer, api, spi, options)
+
+    plugin.extensionPoints() for plugin in plugins when plugin.extensionPoints
+    plugin.extensions() for plugin in plugins when plugin.extensions
+    plugin.initialize() for plugin in plugins when plugin.initialize
 
     return api
 
@@ -52,5 +52,6 @@
     returnValue
 
   $.fn.honegger.defaults = {
-    extensionPoints: [ComposingMode]
+    plugins: [ComposingMode]
+    extraPlugins: []
   })(jQuery);

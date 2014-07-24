@@ -8,11 +8,13 @@ describe 'composing mode extension point', ->
   it 'should be able to add new composing mode to composer', ->
     composer = context.composer.honegger
       defaultMode: 'test'
-      features:
-        test: (honegger) ->
-          honegger.mode 'test',
-            on: ->
-            off: ->
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'test',
+              on: ->
+              off: ->
+      ]
 
     expect(composer.honegger('modes')).toEqual(['test'])
 
@@ -20,9 +22,11 @@ describe 'composing mode extension point', ->
     handler = on: jasmine.createSpy(), off: jasmine.createSpy()
     context.composer.honegger
       defaultMode: 'test'
-      features:
-        test: (honegger) ->
-          honegger.mode 'test', handler
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'test', handler
+      ]
     expect(handler.on).toHaveBeenCalled()
 
 
@@ -31,11 +35,12 @@ describe 'composing mode extension point', ->
     modeBHandler = on: jasmine.createSpy(), off: jasmine.createSpy()
     composer = context.composer.honegger
       defaultMode: 'modeA'
-      features:
-        modeA: (honegger) ->
-          honegger.mode 'modeA', modeAHandler
-        modeB: (honegger) ->
-          honegger.mode 'modeB', modeBHandler
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'modeA', modeAHandler
+            spi.mode 'modeB', modeBHandler
+      ]
 
     composer.honegger('changeMode', 'modeB')
     expect(modeAHandler.off).toHaveBeenCalled()
@@ -46,11 +51,12 @@ describe 'composing mode extension point', ->
     handlerB = on: jasmine.createSpy(), off: jasmine.createSpy()
     context.composer.honegger
       defaultMode: 'modeA'
-      features:
-        pluginA: (honegger) ->
-          honegger.mode 'modeA', handlerA
-        pluginB: (honegger) ->
-          honegger.mode 'modeA', handlerB
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'modeA', handlerA
+            spi.mode 'modeA', handlerB
+      ]
 
     expect(handlerA.on).toHaveBeenCalled()
     expect(handlerB.on).toHaveBeenCalled()
@@ -58,24 +64,29 @@ describe 'composing mode extension point', ->
   it 'should get default mode as current composing mode', ->
     composer = context.composer.honegger
       defaultMode: 'test'
-      features:
-        test: (honegger) ->
-          honegger.mode 'test',
-            on: ->
-            off: ->
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'test',
+              on: ->
+              off: ->
+      ]
+
     expect(composer.honegger('mode')).toEqual('test')
 
   it 'should get composing mode after mode changed', ->
     composer = context.composer.honegger
       defaultMode: 'modeA'
-      features:
-        modeA: (honegger) ->
-          honegger.mode 'modeA',
-            on: ->
-            off: ->
-        modeB: (honegger) ->
-          honegger.mode 'modeB',
-            on: ->
-            off: ->
+      extraPlugins: [
+        (composer, api, spi, options) ->
+          extensions: ->
+            spi.mode 'modeA',
+              on: ->
+              off: ->
+            spi.mode 'modeB',
+              on: ->
+                off: ->
+      ]
+      
     composer.honegger('changeMode', 'modeB')
     expect(composer.honegger('mode')).toEqual('modeB')
