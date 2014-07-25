@@ -14,28 +14,22 @@ describe 'content component extension point', ->
     context.composer = $('#composer')
 
   it 'should install component to composer', ->
-    component =
-      editor: jasmine.createSpy(), control: jasmine.createSpy()
     composer = context.composer.honegger
-      extraPlugins: [
-        (api, spi) ->
-          extensions: ->
-            spi.installComponent 'textbox', component
-      ]
-    composer.honegger('newComponent', 'textbox')
-    expect(component.editor).toHaveBeenCalled()
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('newComponent', 'textbox', label: 'title')
+    expect($('#label', composer).length).toBe(1)
 
   it 'should set configuration element in editor', ->
     composer = context.composer.honegger
       extraPlugins: [textboxPlugin()]
-    editor = composer.honegger('newComponent', 'textbox', label: 'title')
-    expect($('#label', editor).val()).toBe('title')
+    composer.honegger('newComponent', 'textbox', label: 'title')
+    expect($('#label', composer).val()).toBe('title')
 
   it 'should set configuration element for nested structure', ->
     composer = context.composer.honegger
       extraPlugins: [textboxPlugin('label.en')]
-    editor = composer.honegger('newComponent', 'textbox', label: { en: 'title'})
-    expect($('#label', editor).val()).toBe('title')
+    composer.honegger('newComponent', 'textbox', label: { en: 'title'})
+    expect($('#label', composer).val()).toBe('title')
 
 
 

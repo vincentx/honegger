@@ -14,13 +14,13 @@
       editor
 
     extensionPoints: ->
-      spi.installComponent = (name, component) ->
-        components[name] = component
+      spi.installComponent = (name, component) -> components[name] = component
+      spi.insertComponent = (component) -> spi.composer.append(component)
 
       api.newComponent = (name, config = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
-        createComponentEditor(name, config)
+        spi.insertComponent(createComponentEditor(name, config))
 
     extensions: ->
       spi.mode 'edit',
