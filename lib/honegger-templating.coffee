@@ -2,8 +2,17 @@
   ContentTemplating = (api, spi) ->
     components = {}
 
-    setComponent = (component, type, config) ->
-      component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
+    IdGenerator =(->
+      componentIds = {}
+
+      next: (type) ->
+        componentIds[type] = 1 unless componentIds[type]?
+        componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']", spi.composer).length != 0
+        "#{type}-#{componentIds[type]}"
+    )()
+
+    newComponent = (component, id, type, config) ->
+      component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type).attr('data-component-id', id)
 
 
     setConfigElementValue = (configElement, value) ->
@@ -15,7 +24,7 @@
         configElement = $(this)
         value = eval("config.#{configElement.attr('data-component-config-key')}")
         setConfigElementValue(configElement, value) if value?
-      setComponent(editor, name, config)
+      newComponent(editor, IdGenerator.next(name), name, config)
 
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
