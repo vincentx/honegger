@@ -44,6 +44,32 @@ describe 'content component extension point', ->
     composer.honegger('insertComponent', 'textbox', label: { en: 'title'})
     expect($('#label', composer).val()).toBe('title')
 
+  it 'should switch all components to content control in preview mode', ->
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title1')
+    composer.honegger('insertComponent', 'textbox', label: 'title2')
+    composer.honegger('changeMode', 'preview')
+    expect($('textarea[data-component-id="textbox-1"]', composer).length).toBe(1)
+    expect($('textarea[data-component-id="textbox-1"]', composer).data('component-config')).toEqual(label: 'title1')
+
+    expect($('textarea[data-component-id="textbox-2"]', composer).length).toBe(1)
+    expect($('textarea[data-component-id="textbox-2"]', composer).data('component-config')).toEqual(label: 'title2')
+
+  it 'should switch all components to content editor in edit mode', ->
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title1')
+    composer.honegger('insertComponent', 'textbox', label: 'title2')
+    composer.honegger('changeMode', 'preview')
+    composer.honegger('changeMode', 'edit')
+
+    expect($('div[data-component-id="textbox-1"]', composer).length).toBe(1)
+    expect($('div[data-component-id="textbox-1"]', composer).data('component-config')).toEqual(label: 'title1')
+
+    expect($('div[data-component-id="textbox-2"]', composer).length).toBe(1)
+    expect($('div[data-component-id="textbox-2"]', composer).data('component-config')).toEqual(label: 'title2')
+
 
 
 
