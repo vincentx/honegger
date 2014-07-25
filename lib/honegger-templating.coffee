@@ -2,6 +2,10 @@
   ContentTemplating = (api, spi) ->
     components = {}
 
+    setComponent = (component, type, config) ->
+      component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
+
+
     setConfigElementValue = (configElement, value) ->
       if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
 
@@ -11,13 +15,13 @@
         configElement = $(this)
         value = eval("config.#{configElement.attr('data-component-config-key')}")
         setConfigElementValue(configElement, value) if value?
-      editor
+      setComponent(editor, name, config)
 
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
       spi.insertComponent = (component) -> spi.composer.append(component)
 
-      api.newComponent = (name, config = {}) ->
+      api.insertComponent = (name, config = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
         spi.insertComponent(createComponentEditor(name, config))
