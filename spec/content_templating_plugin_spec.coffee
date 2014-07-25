@@ -1,13 +1,22 @@
 describe 'content component extension point', ->
   context = {}
-  textboxPlugin = (key = 'label') ->
+  labelEn =
+    editor: ->
+      $("<div><input id='label' type='text' data-component-config-key='label.en'></div>")
+    control: ->
+      $("<textarea></textarea>")
+  label =
+    editor: ->
+      $("<div><input id='label' type='text' data-component-config-key='label'></div>")
+    destroyEditor: (editor) ->
+    control: ->
+      $("<textarea></textarea>")
+    destroyControl: (contorl) ->
+
+  textboxPlugin = (component = label) ->
     (api, spi) ->
       extensions: ->
-        spi.installComponent 'textbox',
-          editor: ->
-            $("<div><input id='label' type='text' data-component-config-key='#{key}'></div>")
-          control: ->
-            $("<textarea></textarea>")
+        spi.installComponent 'textbox', component
 
   beforeEach ->
     loadFixtures('bare-composer.html')
@@ -40,7 +49,7 @@ describe 'content component extension point', ->
 
   it 'should set configuration element for nested structure', ->
     composer = context.composer.honegger
-      extraPlugins: [textboxPlugin('label.en')]
+      extraPlugins: [textboxPlugin(labelEn)]
     composer.honegger('insertComponent', 'textbox', label: { en: 'title'})
     expect($('#label', composer).val()).toBe('title')
 
@@ -69,6 +78,41 @@ describe 'content component extension point', ->
 
     expect($('div[data-component-id="textbox-2"]', composer).length).toBe(1)
     expect($('div[data-component-id="textbox-2"]', composer).data('component-config')).toEqual(label: 'title2')
+
+  it 'should not lose configuration during switching in modes', ->
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title')
+
+    $('#label', composer).val('new title')
+
+    composer.honegger('changeMode', 'preview')
+    expect($('*[data-component-id="textbox-1"]', composer).data('component-config')).toEqual(label: 'new title')
+
+    composer.honegger('changeMode', 'edit')
+    expect($('#label', composer).val()).toEqual('new title')
+
+  it 'should destroy editor when switch to preview mode', ->
+    spyOn(label, 'destroyEditor')
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title')
+
+    composer.honegger('changeMode', 'preview')
+
+    expect(label.destroyEditor).toHaveBeenCalled()
+
+  it 'should destroy control when switch to edit mode', ->
+    spyOn(label, 'destroyControl')
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title')
+
+    composer.honegger('changeMode', 'preview')
+    composer.honegger('changeMode', 'edit')
+
+    expect(label.destroyControl).toHaveBeenCalled()
+
 
 
 

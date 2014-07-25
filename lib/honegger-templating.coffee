@@ -1,4 +1,33 @@
 (($) ->
+  ComponentEditor = (->
+    getConfigElementValue = (configElement) ->
+      if configElement.attr('type') == 'checkbox' then configElement.is(':checked') else configElement.val();
+
+    setConfigElementValue = (configElement, value) ->
+      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
+
+    setupNestedStructure = (config, key) ->
+      struct = config
+      for field in key.split('.')
+        struct[field] = {} unless struct[field]?
+        struct = struct[field]
+
+    getConfiguration: (editor) ->
+      config = editor.data('component-config') || {}
+      $('*[data-component-config-key]', editor).each ->
+        configElement = $(this)
+        key = configElement.data('component-config-key')
+        setupNestedStructure(config, key) if key.indexOf('.') != -1
+        eval("config.#{key} = getConfigElementValue(configElement)")
+      config
+    setConfiguration: (editor, config) ->
+      $('*[data-component-config-key]', editor).each ->
+        configElement = $(this)
+        value = eval("config.#{configElement.data('component-config-key')}")
+        setConfigElementValue(configElement, value) if value?
+      editor
+  )()
+
   ContentTemplating = (api, spi) ->
     components = {}
 
@@ -14,18 +43,23 @@
     newComponent = (component, id, type, config) ->
       component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type).attr('data-component-id', id)
 
-    setConfigElementValue = (configElement, value) ->
-      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
-
     createComponentEditor = (name, id, config) ->
       editor = components[name].editor("template", config)
-      $('*[data-component-config-key]', editor).each ->
-        configElement = $(this)
-        value = eval("config.#{configElement.attr('data-component-config-key')}")
-        setConfigElementValue(configElement, value) if value?
-      newComponent(editor, id, name, config)
+      newComponent(ComponentEditor.setConfiguration(editor, config), id, name, config)
     createComponentControl = (name, id, config, value) ->
       newComponent(components[name].control("template", value), id, name, config)
+
+    createComponent = (composer, creator) ->
+      $('*[data-role="component"]', composer).each ->
+        component = $(this)
+        component.replaceWith(creator(component.data('component-type'),
+          component.data('component-id'), ComponentEditor.getConfiguration(component), {}))
+    destroyComponent = (composer, destroy) ->
+      $('*[data-role="component"]', composer).each ->
+        component = $(this)
+        type = components[component.data('component-type')]
+        return $.error("no such component #{component.data('component-type')}") unless type
+        type[destroy](component) if type[destroy]
 
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
@@ -38,19 +72,11 @@
 
     extensions: ->
       spi.mode 'edit',
-        on: (composer) ->
-          $('*[data-role="component"]', composer).each ->
-            component = $(this)
-            component.replaceWith(createComponentEditor(component.data('component-type'),
-              component.data('component-id'), component.data('component-config')))
-        off: (composer) ->
+        on: (composer) -> createComponent(composer, createComponentEditor)
+        off: (composer) -> destroyComponent(composer, 'destroyEditor')
       spi.mode 'preview',
-        on: (composer) ->
-          $('*[data-role="component"]', composer).each ->
-            component = $(this)
-            component.replaceWith(createComponentControl(component.data('component-type'),
-              component.data('component-id'), component.data('component-config'), {}))
-        off: (composer) ->
+        on: (composer) -> createComponent(composer, createComponentControl)
+        off: (composer) -> destroyComponent(composer, 'destroyControl')
 
   $.fn.honegger.defaults.plugins.push(ContentTemplating)
   $.fn.honegger.defaults.defaultMode = 'edit')(jQuery)
