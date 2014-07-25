@@ -9,7 +9,7 @@ describe 'composing mode extension point', ->
     composer = context.composer.honegger
       defaultMode: 'test'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'test',
               on: ->
@@ -23,7 +23,7 @@ describe 'composing mode extension point', ->
     context.composer.honegger
       defaultMode: 'test'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'test', handler
       ]
@@ -36,7 +36,7 @@ describe 'composing mode extension point', ->
     composer = context.composer.honegger
       defaultMode: 'modeA'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'modeA', modeAHandler
             spi.mode 'modeB', modeBHandler
@@ -52,7 +52,7 @@ describe 'composing mode extension point', ->
     context.composer.honegger
       defaultMode: 'modeA'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'modeA', handlerA
             spi.mode 'modeA', handlerB
@@ -65,7 +65,7 @@ describe 'composing mode extension point', ->
     composer = context.composer.honegger
       defaultMode: 'test'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'test',
               on: ->
@@ -78,7 +78,7 @@ describe 'composing mode extension point', ->
     composer = context.composer.honegger
       defaultMode: 'modeA'
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.mode 'modeA',
               on: ->

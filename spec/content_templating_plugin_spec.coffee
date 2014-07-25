@@ -1,7 +1,7 @@
 describe 'content component extension point', ->
   context = {}
   textboxPlugin = (key = 'label') ->
-    (composer, api, spi, options) ->
+    (api, spi) ->
       extensions: ->
         spi.installComponent 'textbox',
           editor: ->
@@ -18,7 +18,7 @@ describe 'content component extension point', ->
       editor: jasmine.createSpy(), control: jasmine.createSpy()
     composer = context.composer.honegger
       extraPlugins: [
-        (composer, api, spi, options) ->
+        (api, spi) ->
           extensions: ->
             spi.installComponent 'textbox', component
       ]

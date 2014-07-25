@@ -1,5 +1,5 @@
 (($) ->
-  ComposingMode = (composer, api, spi, options) ->
+  ComposingMode = (api, spi) ->
     modes = {}
     current = undefined
 
@@ -12,18 +12,18 @@
       api.changeMode = (mode) ->
         $.error("no such mode #{mode}") unless modes[mode]
 
-        ($.each modes[current], -> this.off(composer)) if current && modes[current]
-        $.each modes[mode], -> this.on(composer)
+        ($.each modes[current], -> this.off(spi.composer)) if current && modes[current]
+        $.each modes[mode], -> this.on(spi.composer)
         current = mode
     initialize: ->
-      api.changeMode(options.defaultMode)
+      api.changeMode(spi.options.defaultMode)
 
   Honegger = (element, options) ->
     composer = $(element)
     api = {}
-    spi = {}
+    spi = composer : composer, options: options
 
-    plugins = options.plugins.concat(options.extraPlugins).map (plugin) -> plugin(composer, api, spi, options)
+    plugins = options.plugins.concat(options.extraPlugins).map (plugin) -> plugin(api, spi)
 
     plugin.extensionPoints() for plugin in plugins when plugin.extensionPoints
     plugin.extensions() for plugin in plugins when plugin.extensions

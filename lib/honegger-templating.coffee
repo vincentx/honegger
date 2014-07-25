@@ -1,5 +1,5 @@
 (($) ->
-  ContentTemplating = (composer, api, spi, options) ->
+  ContentTemplating = (api, spi) ->
     components = {}
 
     setConfigElementValue = (configElement, value) ->
