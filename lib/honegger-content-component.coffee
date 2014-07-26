@@ -6,7 +6,7 @@
     setConfigElementValue = (configElement, value) ->
       if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
 
-    setupNestedStructure = (config, key) ->
+    ensure = (config, key) ->
       struct = config
       for field in key.split('.')
         struct[field] = {} unless struct[field]?
@@ -17,7 +17,7 @@
       $('*[data-component-config-key]', editor).each ->
         configElement = $(this)
         key = configElement.data('component-config-key')
-        setupNestedStructure(config, key) if key.indexOf('.') != -1
+        ensure(config, key) if key.indexOf('.') != -1
         eval("config.#{key} = getConfigElementValue(configElement)")
       config
     setConfiguration: (editor, config) ->
@@ -28,7 +28,7 @@
       editor
   )()
 
-  ContentTemplating = (api, spi) ->
+  ContentComponent = (api, spi) ->
     components = {}
 
     IdGenerator =(->
@@ -78,5 +78,5 @@
         on: (composer) -> createComponent(composer, createComponentControl)
         off: (composer) -> destroyComponent(composer, 'destroyControl')
 
-  $.fn.honegger.defaults.plugins.push(ContentTemplating)
+  $.fn.honegger.defaults.plugins.push(ContentComponent)
   $.fn.honegger.defaults.defaultMode = 'edit')(jQuery)
