@@ -12,8 +12,8 @@
       api.changeMode = (mode) ->
         $.error("no such mode #{mode}") unless modes[mode]
 
-        ($.each modes[current], -> this.off(spi.composer)) if current && modes[current]
-        $.each modes[mode], -> this.on(spi.composer)
+        ($.each modes[current], -> this.off()) if current && modes[current]
+        $.each modes[mode], -> this.on()
         current = mode
     initialize: ->
       api.changeMode(spi.options.defaultMode)

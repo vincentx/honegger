@@ -6,7 +6,7 @@
     setConfigElementValue = (configElement, value) ->
       if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
 
-    ensure = (config, key) ->
+    ensureExist = (config, key) ->
       struct = config
       for field in key.split('.')
         struct[field] = {} unless struct[field]?
@@ -17,7 +17,7 @@
       $('*[data-component-config-key]', editor).each ->
         configElement = $(this)
         key = configElement.data('component-config-key')
-        ensure(config, key) if key.indexOf('.') != -1
+        ensureExist(config, key) if key.indexOf('.') != -1
         eval("config.#{key} = getConfigElementValue(configElement)")
       config
     setConfiguration: (editor, config) ->
@@ -49,13 +49,13 @@
     createComponentControl = (name, id, config, value) ->
       newComponent(components[name].control("template", value), id, name, config)
 
-    createComponent = (composer, creator) ->
-      $('*[data-role="component"]', composer).each ->
+    createComponent = (creator) ->
+      spi.components().each ->
         component = $(this)
         component.replaceWith(creator(component.data('component-type'),
           component.data('component-id'), ComponentEditor.getConfiguration(component), {}))
-    destroyComponent = (composer, destroy) ->
-      $('*[data-role="component"]', composer).each ->
+    destroyComponent = (destroy) ->
+      spi.components().each ->
         component = $(this)
         type = components[component.data('component-type')]
         return $.error("no such component #{component.data('component-type')}") unless type
@@ -64,6 +64,7 @@
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
       spi.insertComponent = (component) -> spi.composer.append(component)
+      spi.components = -> $('*[data-role="component"]', spi.composer)
 
       api.insertComponent = (name, config = {}) ->
         return $.error("no such component #{name}") unless components[name]
@@ -72,11 +73,11 @@
 
     extensions: ->
       spi.mode 'edit',
-        on: (composer) -> createComponent(composer, createComponentEditor)
-        off: (composer) -> destroyComponent(composer, 'destroyEditor')
+        on:  -> createComponent(createComponentEditor)
+        off:  -> destroyComponent('destroyEditor')
       spi.mode 'preview',
-        on: (composer) -> createComponent(composer, createComponentControl)
-        off: (composer) -> destroyComponent(composer, 'destroyControl')
+        on: -> createComponent(createComponentControl)
+        off: -> destroyComponent('destroyControl')
 
   $.fn.honegger.defaults.plugins.push(ContentComponent)
   $.fn.honegger.defaults.defaultMode = 'edit')(jQuery)
