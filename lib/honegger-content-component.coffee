@@ -12,31 +12,28 @@
         struct[field] = {} unless struct[field]?
         struct = struct[field]
 
-    getConfiguration: (editor) ->
-      config = editor.data('component-config') || {}
-      $('*[data-component-config-key]', editor).each ->
-        configElement = $(this)
-        key = configElement.data('component-config-key')
-        ensureExist(config, key) if key.indexOf('.') != -1
-        eval("config.#{key} = getValue(configElement)")
-      config
-    setConfiguration: (editor, config) ->
-      $('*[data-component-config-key]', editor).each ->
-        configElement = $(this)
-        value = eval("config.#{configElement.data('component-config-key')}")
-        setValue(configElement, value) if value?
+    setValues = (editor, values, selector) ->
+      $("*[#{selector}]", editor).each ->
+        element = $(this)
+        value = eval("values.#{element.attr(selector)}")
+        setValue(element, value) if value?
       editor
 
-    setContent: (editor, content) ->
-      $('*[name]', editor).each ->
-        contentElement = $(this)
-        value = eval("content.#{contentElement.attr('name')}")
-        setValue(contentElement, value) if value?
-      editor
+    getValues = (editor, values, selector) ->
+      $("*[#{selector}]", editor).each ->
+        element = $(this)
+        key = element.attr(selector)
+        ensureExist(values, key) if key.indexOf('.') != -1
+        eval("values.#{key} = getValue(element)")
+      values
 
-    new: (component, config) ->
-      editor = this.setConfiguration(component.editor("template", config), config)
-      this.setContent(editor, component.dataTemplate) if component.dataTemplate
+    getConfiguration: (editor) -> getValues(editor, editor.data('component-config') || {}, 'data-component-config-key')
+
+    getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
+
+    new: (component, config, value = component.dataTemplate) ->
+      editor = setValues(component.editor("template", config), config, 'data-component-config-key')
+      setValues(editor, value, 'name') if value?
       editor
   )()
 
@@ -57,16 +54,16 @@
       component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
       .attr('data-component-id', id)
 
-    createComponentEditor = (name, id, config) ->
-      newComponent(ComponentEditor.new(components[name], config), id, name, config)
+    createComponentEditor = (name, id, config, value) ->
+      newComponent(ComponentEditor.new(components[name], config, value), id, name, config)
     createComponentControl = (name, id, config, value) ->
-      newComponent(components[name].control("template", value), id, name, config)
+      newComponent(components[name].control("template", value), id, name, config).data('component-content', value)
 
     createComponent = (creator) ->
       spi.components().each ->
         component = $(this)
         component.replaceWith(creator(component.data('component-type'),
-          component.data('component-id'), ComponentEditor.getConfiguration(component), {}))
+          component.data('component-id'), ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component)))
     destroyComponent = (destroy) ->
       spi.components().each ->
         component = $(this)

@@ -99,6 +99,17 @@ describe 'content component extension point', ->
     composer.honegger('changeMode', 'edit')
     expect($('#label', composer).val()).toEqual('new title')
 
+  it 'should not lose content during switching in modes', ->
+    console.log("---------------------")
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title')
+    $('input[name="content"]', composer).val('new content')
+    composer.honegger('changeMode', 'preview')
+    composer.honegger('changeMode', 'edit')
+    expect($('input[name="content"]', composer).val()).toEqual('new content')
+    console.log("---------------------")
+
   it 'should destroy editor when switch to preview mode', ->
     spyOn(label, 'destroyEditor')
     composer = context.composer.honegger
