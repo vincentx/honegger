@@ -1,10 +1,10 @@
 (($) ->
   ComponentEditor = (->
-    getConfigElementValue = (configElement) ->
-      if configElement.attr('type') == 'checkbox' then configElement.is(':checked') else configElement.val();
+    getValue = (element) ->
+      if element.attr('type') == 'checkbox' then element.is(':checked') else element.val();
 
-    setConfigElementValue = (configElement, value) ->
-      if configElement.attr('type') == 'checkbox' then configElement.prop('checked', value) else configElement.val(value)
+    setValue = (element, value) ->
+      if element.attr('type') == 'checkbox' then element.prop('checked', value) else element.val(value)
 
     ensureExist = (config, key) ->
       struct = config
@@ -18,13 +18,25 @@
         configElement = $(this)
         key = configElement.data('component-config-key')
         ensureExist(config, key) if key.indexOf('.') != -1
-        eval("config.#{key} = getConfigElementValue(configElement)")
+        eval("config.#{key} = getValue(configElement)")
       config
     setConfiguration: (editor, config) ->
       $('*[data-component-config-key]', editor).each ->
         configElement = $(this)
         value = eval("config.#{configElement.data('component-config-key')}")
-        setConfigElementValue(configElement, value) if value?
+        setValue(configElement, value) if value?
+      editor
+
+    setContent: (editor, content) ->
+      $('*[name]', editor).each ->
+        contentElement = $(this)
+        value = eval("content.#{contentElement.attr('name')}")
+        setValue(contentElement, value) if value?
+      editor
+
+    new: (component, config) ->
+      editor = this.setConfiguration(component.editor("template", config), config)
+      this.setContent(editor, component.dataTemplate) if component.dataTemplate
       editor
   )()
 
@@ -36,16 +48,17 @@
 
       next: (type) ->
         componentIds[type] = 1 unless componentIds[type]?
-        componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']", spi.composer).length != 0
+        componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']",
+          spi.composer).length != 0
         "#{type}-#{componentIds[type]}"
     )()
 
     newComponent = (component, id, type, config) ->
-      component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type).attr('data-component-id', id)
+      component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
+      .attr('data-component-id', id)
 
     createComponentEditor = (name, id, config) ->
-      editor = components[name].editor("template", config)
-      newComponent(ComponentEditor.setConfiguration(editor, config), id, name, config)
+      newComponent(ComponentEditor.new(components[name], config), id, name, config)
     createComponentControl = (name, id, config, value) ->
       newComponent(components[name].control("template", value), id, name, config)
 

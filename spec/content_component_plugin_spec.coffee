@@ -6,8 +6,9 @@ describe 'content component extension point', ->
     control: ->
       $("<textarea></textarea>")
   label =
+    dataTemplate: {content: 'content'}
     editor: ->
-      $("<div><input id='label' type='text' data-component-config-key='label'></div>")
+      $("<div><input id='label' type='text' data-component-config-key='label'><input name='content' type='text'></div>")
     destroyEditor: (editor) ->
     control: ->
       $("<textarea></textarea>")
@@ -52,6 +53,12 @@ describe 'content component extension point', ->
       extraPlugins: [textboxPlugin(labelEn)]
     composer.honegger('insertComponent', 'textbox', label: { en: 'title'})
     expect($('#label', composer).val()).toBe('title')
+
+  it 'should set content value for editor', ->
+    composer = context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    composer.honegger('insertComponent', 'textbox', label: 'title')
+    expect($('input[name="content"]', composer).val()).toEqual('content')
 
   it 'should switch all components to content control in preview mode', ->
     composer = context.composer.honegger
