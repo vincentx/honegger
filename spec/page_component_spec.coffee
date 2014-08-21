@@ -35,6 +35,25 @@ describe 'page component', ->
     expect($('.section-column', editor).length).toBe(1)
     expect($('.section-column *[data-component="rich-text"]', editor).length).toBe(1)
 
+  it 'should append component to section', ->
+    editor = $.fn.honegger.page(
+      layoutEditor: ->
+        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
+      componentEditor: ->
+        $('<div><button class="add-component" data-component="rich-text"></button></div>')
+      layouts:
+        'one-column' :
+          layout: $('.one-column').html()
+      api:
+        installComponent: (target, name, config) ->
+          target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
+    ).editor()
+
+    $('.add-layout', editor).click()
+    $('.add-component', editor).click()
+
+    expect($('.section-column div[data-component-id="rich-text-1"]', editor).length).toBe(1)
+
 
 
 

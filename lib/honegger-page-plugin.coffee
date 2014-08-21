@@ -4,7 +4,6 @@
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
     initComponentContainer = (target) ->
-      console.log(options)
       $('.component-container', target).each ->
         $(this).append(options.componentEditor(options))
       target
@@ -20,7 +19,11 @@
       $('.add-layout', editor).click ->
         layout = $(this).attr('data-layout')
         if options.layouts[layout]
-          $('.layout-container .sections', editor).append(initComponentContainer($(options.layouts[layout].layout)))
+          layoutTemplate = initComponentContainer($(options.layouts[layout].layout))
+          $('.add-component', layoutTemplate).click ->
+            component = $(this).attr('data-component')
+            options.api.installComponent($('.components', $(this).parents('.component-container')), component)
+          $('.layout-container .sections', editor).append(layoutTemplate)
 
       editor
 
