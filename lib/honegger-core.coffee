@@ -50,7 +50,6 @@
 
     this.each if isMethodCall then methodCall else initComponent
     returnValue
-
   $.fn.honegger.defaults = {
     plugins: [ComposingMode]
     extraPlugins: []
