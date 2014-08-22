@@ -1,5 +1,4 @@
 (($) ->
-
   $.fn.honegger.page = (options) ->
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
@@ -22,7 +21,7 @@
           layoutTemplate = initComponentContainer($(options.layouts[layout].layout))
           $('.add-component', layoutTemplate).click ->
             component = $(this).attr('data-component')
-            options.api.installComponent($('.components', $(this).parents('.component-container')), component)
+            options.spi.installComponent($('.components', $(this).parents('.component-container')), component)
           $('.layout-container .sections', editor).append(layoutTemplate)
 
       editor
@@ -40,4 +39,12 @@
       '<input type="hidden" data-component-config-key="title" value="">' +
       '<div class="page-content layout-container"><div class="sections"></div></div>' +
     '</div>'
+
+  PageComponent = (api, spi) ->
+    extensionPoints: ->
+      spi.installPage = (name, config) ->
+        config = $.extend({}, {spi: spi}, config)
+        spi.installComponent(name, $.fn.honegger.page(config))
+
+  $.fn.honegger.defaults.plugins.push(PageComponent)
 )(jQuery);

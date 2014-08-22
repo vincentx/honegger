@@ -44,7 +44,7 @@ describe 'page component', ->
       layouts:
         'one-column' :
           layout: $('.one-column').html()
-      api:
+      spi:
         installComponent: (target, name, config) ->
           target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
     ).editor()
@@ -63,7 +63,7 @@ describe 'page component', ->
       layouts:
         'one-column':
           layout: $('.one-column').html()
-      api:
+      spi:
         installComponent: (target, name, config) ->
           target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
     )
@@ -76,8 +76,5 @@ describe 'page component', ->
     expect($('.component-container', control).length).toBe(1)
     expect($('.add-layout', control).length).toBe(0)
     expect($('.add-component', control).length).toBe(0)
-
-
-
 
 

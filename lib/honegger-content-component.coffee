@@ -73,13 +73,14 @@
 
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
-      spi.insertComponent = (component) -> spi.composer.append(component)
-      spi.components = -> $('*[data-role="component"]', spi.composer)
-
-      api.insertComponent = (name, config = {}) ->
+      spi.insertComponent = (target, name, config = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
-        spi.insertComponent(createComponentEditor(name, IdGenerator.next(name), config))
+        target.append(createComponentEditor(name, IdGenerator.next(name), config))
+
+      spi.components = -> $('*[data-role="component"]', spi.composer)
+
+      api.insertComponent = (name, config = {}) -> spi.insertComponent(spi.composer, name, config)
 
     extensions: ->
       spi.mode 'edit',
