@@ -4,12 +4,15 @@
 
     initComponentContainer = (target) ->
       $('.component-container', target).each ->
-        $(this).append(options.componentEditor(options))
+        editor = options.componentEditor(options)
+        $(this).append(editor) if editor?
       target
 
     dataTempalte: {}
-    editor: (config, component) ->
+    editor: (template, config, component) ->
       editor = component ? $(options.template)
+      return editor if $('.add-layout', editor).length != 0
+
       $('.layout-container', editor).each ->
         $(this).append(options.layoutEditor(options))
 
@@ -25,7 +28,7 @@
           $('.layout-container .sections', editor).append(layoutTemplate)
 
       editor
-    control: (config, component) ->
+    control: (template, config, component) ->
       return $('<div></div>') unless component?
 
       $('.layout-container', component).children().each ->

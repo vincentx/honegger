@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo Page</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <script src="../vendor/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="../lib/honegger.js"></script>
+</head>
+<body>
+    <div class="content"></div>
+    <div class="hidden">
+        <div class="page-template">
+            <div>
+            <div class="page-content layout-container">
+                <div class="sections"></div>
+            </div>
+            </div>
+        </div>
+
+        <div class="one-column">
+            <div class="section-block">
+                <div class="section-column component-container"><div class="components"></div></div>
+            </div>
+        </div>
+
+        <div class="layout-panel">
+            <button class="add-layout" data-layout="one-column">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </button>
+        </div>
+
+        <div class="component-panel">
+            <button class="add-component" data-component="rich-text">
+                <span class="glyphicon glyphicon-text-width"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        layout = $('.layout-panel')[0].outerHTML;
+        component = $('.component-panel')[0].outerHTML;
+        oneColumn = $('.one-column')[0].outerHTML;
+        Plugin = function(api, spi) {
+            return {
+                extensions: function() {
+                    spi.installPage("blank", {
+                        layoutEditor: function() {
+                            return $(layout);
+                        },
+                        componentEditor: function() {
+                            return $(component);
+                        },
+                        layouts: {
+                            'one-column': {
+                                layout: oneColumn
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        $(".content").honegger({
+            extraPlugins: [Plugin]
+        });
+
+        $(".content").honegger('insertComponent', 'blank');
+    </script>
+</body>
+</html>
