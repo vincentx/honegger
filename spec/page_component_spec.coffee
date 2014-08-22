@@ -54,6 +54,30 @@ describe 'page component', ->
 
     expect($('.section-column div[data-component-id="rich-text-1"]', editor).length).toBe(1)
 
+  it 'should switch to control mode', ->
+    page = $.fn.honegger.page(
+      layoutEditor: ->
+        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
+      componentEditor: ->
+        $('<div><button class="add-component" data-component="rich-text"></button></div>')
+      layouts:
+        'one-column':
+          layout: $('.one-column').html()
+      api:
+        installComponent: (target, name, config) ->
+          target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
+    )
+    editor = page.editor()
+
+    $('.add-layout', editor).click()
+
+    control = page.control({}, editor)
+
+    expect($('.component-container', control).length).toBe(1)
+    expect($('.add-layout', control).length).toBe(0)
+    expect($('.add-component', control).length).toBe(0)
+
+
 
 
 

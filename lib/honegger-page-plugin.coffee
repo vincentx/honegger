@@ -26,6 +26,14 @@
           $('.layout-container .sections', editor).append(layoutTemplate)
 
       editor
+    control: (config, component) ->
+      return $('<div></div>') unless component?
+
+      $('.layout-container', component).children().each ->
+        $(this).remove() unless $(this).hasClass("sections")
+      $('.component-container', component).children().each ->
+        $(this).remove() unless $(this).hasClass("components")
+      component
 
   $.fn.honegger.page.defaults =
     template: '<div>' +
