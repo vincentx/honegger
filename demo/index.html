@@ -4,11 +4,18 @@
     <title>Demo Page</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="../vendor/jquery-2.0.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="../lib/honegger.js"></script>
 </head>
 <body>
+    <div class="btn-toolbar theme-toolbar">
+        <div class="btn-group">
+            <button type="button" data-theme="theme-1" class="btn btn-default" data-toggle="modal" data-target="#theme-1"><span>PowerPoint</span></button>
+            <button type="button" data-theme="theme-2" class="btn btn-default" data-toggle="modal" data-target="#theme-2"><span>Theme2</span></button>
+        </div>
+    </div>
     <div class="content"></div>
     <div class="hidden">
         <div class="page-template">
@@ -35,6 +42,28 @@
             <button class="add-component" data-component="rich-text">
                 <span class="glyphicon glyphicon-text-width"></span>
             </button>
+        </div>
+
+        <div class="page-list">
+            <span class="glyphicon glyphicon-plus add-page"></span>
+        </div>
+    </div>
+
+    <!--theme-1 modal-->
+    <div class="composer modal fade" id="theme-1" data-keyboard="true" data-backdrop="false" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <iframe class="" src="theme1.html" id="theme-1-frame"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!--theme-2 modal-->
+    <div class="composer modal fade" id="theme-2" data-keyboard="true" data-backdrop="false" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <iframe class="" src="theme1.html" id="theme-2-frame"></iframe>
+            </div>
         </div>
     </div>
 

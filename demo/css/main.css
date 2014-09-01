@@ -1,0 +1,122 @@
+.content > div:not(.page-list-container) {
+    margin-left: 240px;
+}
+
+.layout-container {
+    margin: 10px 0 30px 0;
+    position: relative;
+}
+
+.layout-container .sections {
+    position: relative;
+    border: 1px dashed #aaa;
+    min-height: 80px;
+    padding: 10px;
+}
+
+.layout-container .layout-panel {
+    position: absolute;
+    bottom: -24px;
+    left: 0px;
+}
+
+.theme-toolbar {
+    margin-left: 7px;
+}
+
+.page-list-container {
+    top: 32px;
+    position: fixed;
+    width: 210px;
+    border-radius: 5px;
+    background: rgb(240, 240, 240);
+    margin: 10px;
+    font-size: 25px;
+}
+
+.add-page.glyphicon {
+    text-align: center;
+    display: block;
+}
+
+.page-list-container .add-page {
+    margin-bottom: 0px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.page-tab,
+.page-tab-placeholder{
+    font-size: 12px;
+    padding: 10px 15px;
+    background: #ddd;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #aaa;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.page-list-container > div:nth-last-child(2) {
+    border-bottom: 1px solid #aaa;
+}
+
+.page-tab .title {
+    line-height: 20px;
+    margin-right: 10px;
+}
+
+.button-group {
+    display: inline-block;
+    position: absolute;
+    line-height: 24px;
+    right: 10px;
+}
+.button-group .glyphicon {
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.button-group .glyphicon-remove {
+    padding: 0px;
+}
+
+.remove-highlight {
+    box-shadow: 0px 0px 2px #009988;
+    transition: all 0.2s;
+}
+
+.active-page {
+    background: #fff;
+}
+
+.page-tab-placeholder {
+    background: #eea236;
+    border: 1px solid #eb9316;
+    height: 40px;
+    opacity: 0.6;
+}
+
+
+/* modal window */
+div.composer div.modal-dialog {
+    min-width: 960px;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+div.composer div.modal-dialog div.modal-content {
+    height: 100%;
+    border: none;
+    position: relative;
+}
+
+div.composer div.modal-dialog div.modal-content iframe{
+    min-width: 960px;
+    border: none;
+    width: 100%;
+    height: 100%;
+}

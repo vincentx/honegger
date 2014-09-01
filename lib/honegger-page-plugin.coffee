@@ -47,7 +47,9 @@
     extensionPoints: ->
       spi.installPage = (name, config) ->
         config = $.extend({}, {spi: spi}, config)
-        spi.installComponent(name, $.fn.honegger.page(config))
+        page = $.fn.honegger.page(config)
+        spi.installComponent(name, page)
+        spi.composer.trigger('installPage', [name, page])
 
   $.fn.honegger.defaults.plugins.push(PageComponent)
 )(jQuery);
