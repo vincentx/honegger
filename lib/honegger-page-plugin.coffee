@@ -2,6 +2,8 @@
   $.fn.honegger.page = (options) ->
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
+    page = null
+
     initComponentContainer = (target) ->
       $('.component-container', target).each ->
         editor = options.componentEditor(options)
@@ -9,33 +11,35 @@
       target
 
     dataTempalte: {}
-    editor: (template, config, component) ->
-      editor = component ? $(options.template)
-      return editor if $('.add-layout', editor).length != 0
+    editor: (config) ->
+      page = $(options.template) unless page
+      return page if $('.add-layout', page).length != 0
 
-      $('.layout-container', editor).each ->
+      $('.layout-container', page).each ->
         $(this).append(options.layoutEditor(options))
 
-      initComponentContainer(editor)
+      initComponentContainer(page)
 
-      $('.add-layout', editor).click ->
+      $('.add-layout', page).click ->
         layout = $(this).attr('data-layout')
         if options.layouts[layout]
           layoutTemplate = initComponentContainer($(options.layouts[layout].layout))
           $('.add-component', layoutTemplate).click ->
             component = $(this).attr('data-component')
-            options.spi.installComponent($('.components', $(this).parents('.component-container')), component)
-          $('.layout-container .sections', editor).append(layoutTemplate)
+            options.spi.insertComponent($('.components', $(this).parents('.component-container')), component)
+          $('.layout-container .sections', page).append(layoutTemplate)
 
-      editor
-    control: (template, config, component) ->
-      return $('<div></div>') unless component?
+      page
+    control: (config) ->
+      page = $('<div></div>') unless page
 
-      $('.layout-container', component).children().each ->
+      $('.layout-container', page).children().each ->
         $(this).remove() unless $(this).hasClass("sections")
-      $('.component-container', component).children().each ->
+      $('.component-container', page).children().each ->
         $(this).remove() unless $(this).hasClass("components")
-      component
+
+      options.spi.toControl(page)
+      page
 
   $.fn.honegger.page.defaults =
     template: '<div>' +

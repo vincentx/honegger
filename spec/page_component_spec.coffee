@@ -1,6 +1,23 @@
 describe 'page component', ->
+  context = {}
+  label =
+    dataTemplate: {content: 'content'}
+    editor: ->
+      $("<div><input id='label' type='text' data-component-config-key='label'><input name='content' type='text'></div>")
+    destroyEditor: (editor) ->
+    control: ->
+      $("<textarea></textarea>")
+    destroyControl: (contorl) ->
+  textboxPlugin = (api, spi) ->
+    context.spi = spi
+    extensions: ->
+      spi.installComponent 'textbox', label
+
   beforeEach ->
     loadFixtures('page-component.html')
+
+    $("#composer").honegger
+      extraPlugins: [textboxPlugin]
 
   it 'should create editor based on tempalte', ->
     editor = $.fn.honegger.page(
@@ -40,41 +57,39 @@ describe 'page component', ->
       layoutEditor: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
-        $('<div><button class="add-component" data-component="rich-text"></button></div>')
+        $('<div><button class="add-component" data-component="textbox"></button></div>')
       layouts:
         'one-column' :
           layout: $('.one-column').html()
-      spi:
-        installComponent: (target, name, config) ->
-          target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
+      spi: context.spi
     ).editor()
 
     $('.add-layout', editor).click()
     $('.add-component', editor).click()
 
-    expect($('.section-column div[data-component-id="rich-text-1"]', editor).length).toBe(1)
+    expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
   it 'should switch to control mode', ->
     page = $.fn.honegger.page(
       layoutEditor: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
-        $('<div><button class="add-component" data-component="rich-text"></button></div>')
+        $('<div><button class="add-component" data-component="textbox"></button></div>')
       layouts:
         'one-column':
           layout: $('.one-column').html()
-      spi:
-        installComponent: (target, name, config) ->
-          target.append($('<div data-component-id="rich-text-1" data-component-type="rich-text"></div>'))
+      spi: context.spi
     )
     editor = page.editor()
 
     $('.add-layout', editor).click()
+    $('.add-component', editor).click()
 
-    control = page.control("template", {}, editor)
+    control = page.control()
 
     expect($('.component-container', control).length).toBe(1)
     expect($('.add-layout', control).length).toBe(0)
     expect($('.add-component', control).length).toBe(0)
+    expect($('textarea[data-component-type="textbox"]', control).length).toBe(1)
 
 
