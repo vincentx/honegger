@@ -59,8 +59,8 @@
     createComponentControl = (name, id, config, value) ->
       newComponent(components[name].control(value), id, name, config).data('component-content', value)
 
-    createComponent = (creator) ->
-      spi.components().each ->
+    createComponent = (components, creator) ->
+      components().each ->
         component = $(this)
         component.replaceWith(creator(component.data('component-type'),
           component.data('component-id'), ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component)))
@@ -78,16 +78,25 @@
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
         target.append(createComponentEditor(name, IdGenerator.next(name), config))
 
+      spi.toEditor = (target) ->
+        createComponent(->
+          $('*[data-role="component"]', target)
+        , createComponentEditor)
+      spi.toComponent = (target) ->
+        createComponent(->
+          $('*[data-role="component"]', target)
+        , createComponentControl)
+
       spi.components = -> $('*[data-role="component"]', spi.composer)
 
       api.insertComponent = (name, config = {}) -> spi.insertComponent(spi.composer, name, config)
 
     extensions: ->
       spi.mode 'edit',
-        on:  -> createComponent(createComponentEditor)
+        on:  -> spi.toEditor(spi.composer)
         off:  -> destroyComponent('destroyEditor')
       spi.mode 'preview',
-        on: -> createComponent(createComponentControl)
+        on: -> spi.toComponent(spi.composer)
         off: -> destroyComponent('destroyControl')
 
   $.fn.honegger.defaults.plugins.push(ContentComponent)
