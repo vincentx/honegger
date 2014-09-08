@@ -146,6 +146,15 @@ describe 'content component extension point', ->
 
     expect($("*[data-component-config-key]", target).length).toBe(1)
 
+  it "should call spi to switch to template from editor", ->
+    context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    target = $("#spi-editor")
+    context.spi.toEditor(target)
+    context.spi.toPlaceholder(target)
+
+    expect($("div[data-role='component']", target).length).toBe(1)
+
 
 
 
