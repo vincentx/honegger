@@ -31,8 +31,8 @@
 
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
-    new: (component, config, value = component.dataTemplate) ->
-      editor = setValues(component.editor(config), config, 'data-component-config-key')
+    new: (target, component, config, value = component.dataTemplate) ->
+      editor = setValues(component.editor(target, config), config, 'data-component-config-key')
       setValues(editor, value, 'name') if value?
       editor
   )()
@@ -54,17 +54,17 @@
       component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
       .attr('data-component-id', id)
 
-    createComponentEditor = (name, id, config, value) ->
-      newComponent(ComponentEditor.new(components[name], config, value), id, name, config)
-    createComponentControl = (name, id, config, value) ->
-      newComponent(components[name].control(value), id, name, config).data('component-content', value)
-    createPlaceHolder = (name, id, config, value) ->
+    createComponentEditor = (target, name, id, config, value) ->
+      newComponent(ComponentEditor.new(target, components[name], config, value), id, name, config)
+    createComponentControl = (target, name, id, config, value) ->
+      newComponent(components[name].control(target, value), id, name, config).data('component-content', value)
+    createPlaceHolder = (target, name, id, config, value) ->
       newComponent($('<div></div>'), id, name, config).data('component-content', value)
 
     createComponent = (components, creator) ->
       components().each ->
         component = $(this)
-        component.replaceWith(creator(component.data('component-type'),
+        component.replaceWith(creator(component, component.data('component-type'),
           component.data('component-id'), ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component)))
     destroyComponent = (destroy) ->
       spi.components().each ->
@@ -78,7 +78,7 @@
       spi.insertComponent = (target, name, config = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
-        target.append(createComponentEditor(name, IdGenerator.next(name), config))
+        target.append(createComponentEditor(null, name, IdGenerator.next(name), config))
 
       spi.toEditor = (target) ->
         createComponent(->

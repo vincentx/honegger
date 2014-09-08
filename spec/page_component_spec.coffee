@@ -88,7 +88,7 @@ describe 'page component', ->
     $('.add-layout', editor).click()
     $('.add-component', editor).click()
 
-    control = page.control()
+    control = page.control(editor)
 
     expect($('.component-container', control).length).toBe(1)
     expect($('.add-layout', control).length).toBe(0)
@@ -111,8 +111,8 @@ describe 'page component', ->
     $('.add-layout', editor).click()
     $('.add-component', editor).click()
 
-    page.control()
-    editor = page.editor()
+    control = page.control(editor)
+    editor = page.editor(control)
 
     expect($('.component-container', editor).length).toBe(1)
     expect($('.add-layout', editor).length).toBe(1)

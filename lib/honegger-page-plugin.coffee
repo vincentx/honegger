@@ -2,8 +2,6 @@
   $.fn.honegger.page = (options) ->
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
-    page = null
-
     initComponentContainer = (target) ->
       $('.component-container', target).each ->
         editor = options.componentEditor(options)
@@ -11,7 +9,7 @@
       target
 
     dataTempalte: {}
-    editor: (config) ->
+    editor: (page, config) ->
       page = $(options.template) unless page
       return page if $('.add-layout', page).length != 0
 
@@ -31,7 +29,7 @@
 
       options.spi.toEditor(page)
       page
-    control: (config) ->
+    control: (page, config) ->
       page = $('<div></div>') unless page
 
       $('.layout-container', page).children().each ->
