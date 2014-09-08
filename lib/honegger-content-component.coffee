@@ -58,6 +58,8 @@
       newComponent(ComponentEditor.new(components[name], config, value), id, name, config)
     createComponentControl = (name, id, config, value) ->
       newComponent(components[name].control(value), id, name, config).data('component-content', value)
+    createPlaceHolder = (name, id, config, value) ->
+      newComponent($('<div></div>'), id, name, config).data('component-content', value)
 
     createComponent = (components, creator) ->
       components().each ->
@@ -82,12 +84,16 @@
         createComponent(->
           $('*[data-role="component"]', target)
         , createComponentEditor)
-      spi.toComponent = (target) ->
+      spi.toControl = (target) ->
         createComponent(->
           $('*[data-role="component"]', target)
         , createComponentControl)
+      spi.toPlaceholder = (target) ->
+        createComponent(->
+          $('*[data-role="component"]', target)
+        , createPlaceHolder)
 
-      spi.components = -> $('*[data-role="component"]', spi.composer)
+      spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
       api.insertComponent = (name, config = {}) -> spi.insertComponent(spi.composer, name, config)
 
@@ -96,7 +102,7 @@
         on:  -> spi.toEditor(spi.composer)
         off:  -> destroyComponent('destroyEditor')
       spi.mode 'preview',
-        on: -> spi.toComponent(spi.composer)
+        on: -> spi.toControl(spi.composer)
         off: -> destroyComponent('destroyControl')
 
   $.fn.honegger.defaults.plugins.push(ContentComponent)

@@ -16,6 +16,7 @@ describe 'content component extension point', ->
 
   textboxPlugin = (component = label) ->
     (api, spi) ->
+      context.spi = spi
       extensions: ->
         spi.installComponent 'textbox', component
 
@@ -128,6 +129,22 @@ describe 'content component extension point', ->
     composer.honegger('changeMode', 'edit')
 
     expect(label.destroyControl).toHaveBeenCalled()
+
+  it 'should call spi to switch a template to control', ->
+    context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    target = $("#spi-editor")
+    context.spi.toControl(target)
+
+    expect($("textarea[data-component-type='textbox']", target).length).toBe(1)
+
+  it "should call spi to switch a template to editor", ->
+    context.composer.honegger
+      extraPlugins: [textboxPlugin()]
+    target = $("#spi-editor")
+    context.spi.toEditor(target)
+
+    expect($("*[data-component-config-key]", target).length).toBe(1)
 
 
 
