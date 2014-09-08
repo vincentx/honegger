@@ -93,6 +93,9 @@
           $('*[data-role="component"]', target)
         , createPlaceHolder)
 
+      spi.getComponentConfiguration = (component) -> ComponentEditor.getConfiguration(component)
+      spi.getComponentContent = (component) -> ComponentEditor.getContent(component)
+
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
       api.insertComponent = (name, config = {}) -> spi.insertComponent(spi.composer, name, config)

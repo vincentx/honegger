@@ -7,9 +7,16 @@
         editor = options.componentEditor(options)
         $(this).append(editor) if editor?
       target
+    removeControls = (page) ->
+      $('.layout-container', page).children().each ->
+        $(this).remove() unless $(this).hasClass("sections")
+      $('.component-container', page).children().each ->
+        $(this).remove() unless $(this).hasClass("components")
+      page
+
 
     dataTempalte: {}
-    editor: (page, config) ->
+    editor: (page) ->
       page = $(options.template) unless page
       return page if $('.add-layout', page).length != 0
 
@@ -29,17 +36,27 @@
 
       options.spi.toEditor(page)
       page
-    control: (page, config) ->
+    control: (page) ->
       page = $('<div></div>') unless page
-
-      $('.layout-container', page).children().each ->
-        $(this).remove() unless $(this).hasClass("sections")
-      $('.component-container', page).children().each ->
-        $(this).remove() unless $(this).hasClass("components")
-
-      options.spi.toControl(page)
+      options.spi.toControl(removeControls(page))
       page
-
+    placeholder: (page) ->
+      page = $('<div></div>') unless page
+      page = page.clone();
+      options.spi.toPlaceholder(removeControls(page))
+      page
+    getConfig: (page) ->
+      config = {}
+      options.spi.components(page).each ->
+        component = $(this)
+        config[component.attr('data-component-id')] = options.spi.getComponentConfiguration(component)
+      config
+    getContent: (page) ->
+      content = {}
+      options.spi.components(page).each ->
+        component = $(this)
+        content[component.attr('data-component-id')] = options.spi.getComponentContent(component)
+      content
   $.fn.honegger.page.defaults =
     template: '<div>' +
       '<input type="hidden" data-component-config-key="title" value="">' +

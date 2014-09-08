@@ -143,5 +143,27 @@ describe 'page component', ->
 
     expect($('div[data-component-type="textbox"]', editor).length).toBe(2)
 
+  it 'should be able to get template from page', ->
+    page = $.fn.honegger.page(
+      layoutEditor: ->
+        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
+      componentEditor: ->
+        $('<div><button class="add-component" data-component="textbox"></button></div>')
+      layouts:
+        'one-column':
+          layout: $('.one-column').html()
+      spi: context.spi
+    )
+    editor = page.editor()
 
+    $('.add-layout', editor).click()
+    $('.add-component', editor).click()
 
+    placeholder = page.placeholder(editor)
+    config = page.getConfig(editor)
+    content = page.getContent(editor)
+
+    expect($('div[data-component-type="textbox"]', placeholder).length).toBe(1)
+
+    expect(config).toEqual({'textbox-1' : { 'label' : '' }})
+    expect(content).toEqual({'textbox-1' : { 'content' : 'content' }})
