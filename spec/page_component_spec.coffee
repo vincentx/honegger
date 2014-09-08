@@ -23,6 +23,7 @@ describe 'page component', ->
     editor = $.fn.honegger.page(
       layoutEditor: ->
         $('<div><button data-layout="two-column"></button></div>')
+      spi: context.spi
     ).editor()
     expect($(".page-content", editor).length).toBe(1)
     expect($('*[data-layout="two-column"]', editor).length).toBe(1)
@@ -34,6 +35,7 @@ describe 'page component', ->
         $('<div><button data-layout="two-column"></button></div>')
       componentEditor: ->
         $('<div><button data-component="rich-text"></button></div>')
+      spi: context.spi
     ).editor()
     expect($('*[data-component="rich-text"]', editor).length).toBe(1)
 
@@ -46,6 +48,7 @@ describe 'page component', ->
       layouts:
         'one-column' :
           layout: $('.one-column').html()
+      spi: context.spi
     ).editor()
 
     $('.add-layout', editor).click()
@@ -91,5 +94,29 @@ describe 'page component', ->
     expect($('.add-layout', control).length).toBe(0)
     expect($('.add-component', control).length).toBe(0)
     expect($('textarea[data-component-type="textbox"]', control).length).toBe(1)
+
+  it 'should be able to switch back to editor mode from control mode', ->
+    page = $.fn.honegger.page(
+      layoutEditor: ->
+        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
+      componentEditor: ->
+        $('<div><button class="add-component" data-component="textbox"></button></div>')
+      layouts:
+        'one-column':
+          layout: $('.one-column').html()
+      spi: context.spi
+    )
+    editor = page.editor()
+
+    $('.add-layout', editor).click()
+    $('.add-component', editor).click()
+
+    page.control()
+    editor = page.editor()
+
+    expect($('.component-container', editor).length).toBe(1)
+    expect($('.add-layout', editor).length).toBe(1)
+    expect($('.add-component', editor).length).toBe(1)
+    expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
 

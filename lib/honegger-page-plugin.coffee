@@ -29,6 +29,7 @@
             options.spi.insertComponent($('.components', $(this).parents('.component-container')), component)
           $('.layout-container .sections', page).append(layoutTemplate)
 
+      options.spi.toEditor(page)
       page
     control: (config) ->
       page = $('<div></div>') unless page
