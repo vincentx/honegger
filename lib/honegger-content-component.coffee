@@ -59,7 +59,8 @@
     createComponentControl = (target, name, id, config, value) ->
       newComponent(components[name].control(target, value), id, name, config).data('component-content', value)
     createPlaceHolder = (target, name, id, config, value) ->
-      newComponent($('<div></div>'), id, name, config).data('component-content', value)
+      placeholder = if components[name].placeholder? then components[name].placeholder(target) else $('<div></div>')
+      newComponent(placeholder, id, name, config).data('component-content', value)
 
     createComponent = (components, creator) ->
       components().each ->
@@ -93,8 +94,15 @@
           $('*[data-role="component"]', target)
         , createPlaceHolder)
 
-      spi.getComponentConfiguration = (component) -> ComponentEditor.getConfiguration(component)
-      spi.getComponentContent = (component) -> ComponentEditor.getContent(component)
+      spi.getPlaceholder = (component) ->
+        createPlaceHolder(component, component.data('component-type'), component.data('component-id'),
+          ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component))
+      spi.getComponentConfiguration = (component) ->
+        componentType = components[component.data('component-type')]
+        if componentType.getConfig? then componentType.getConfig(component) else ComponentEditor.getConfiguration(component)
+      spi.getComponentContent = (component) ->
+        componentType = components[component.data('component-type')]
+        if componentType.getContent? then componentType.getContent(component) else ComponentEditor.getContent(component)
 
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
