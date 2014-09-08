@@ -119,4 +119,29 @@ describe 'page component', ->
     expect($('.add-component', editor).length).toBe(1)
     expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
+  it 'should be able to switch back to editor mode and add components', ->
+    page = $.fn.honegger.page(
+      layoutEditor: ->
+        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
+      componentEditor: ->
+        $('<div><button class="add-component" data-component="textbox"></button></div>')
+      layouts:
+        'one-column':
+          layout: $('.one-column').html()
+      spi: context.spi
+    )
+    editor = page.editor()
+
+    $('.add-layout', editor).click()
+    $('.add-component', editor).click()
+
+    control = page.control(editor)
+    editor = page.editor(control)
+
+    $('.add-layout', editor).click()
+    $('.add-component', editor).click()
+
+    expect($('div[data-component-type="textbox"]', editor).length).toBe(2)
+
+
 
