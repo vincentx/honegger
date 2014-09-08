@@ -32,7 +32,7 @@
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
     new: (component, config, value = component.dataTemplate) ->
-      editor = setValues(component.editor("template", config), config, 'data-component-config-key')
+      editor = setValues(component.editor(config), config, 'data-component-config-key')
       setValues(editor, value, 'name') if value?
       editor
   )()
@@ -57,7 +57,7 @@
     createComponentEditor = (name, id, config, value) ->
       newComponent(ComponentEditor.new(components[name], config, value), id, name, config)
     createComponentControl = (name, id, config, value) ->
-      newComponent(components[name].control("template", value), id, name, config).data('component-content', value)
+      newComponent(components[name].control(value), id, name, config).data('component-content', value)
 
     createComponent = (creator) ->
       spi.components().each ->
