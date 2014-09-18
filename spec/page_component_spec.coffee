@@ -19,7 +19,7 @@ describe 'page component', ->
     $("#composer").honegger
       extraPlugins: [textboxPlugin]
 
-  it 'should create editor based on tempalte', ->
+  it 'should create editor based on template', ->
     editor = $.fn.honegger.page(
       layoutEditor: ->
         $('<div><button data-layout="two-column"></button></div>')
