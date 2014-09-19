@@ -1,5 +1,5 @@
 (($) ->
-  PageListComponent = (api, spi) ->
+  PageList = (api, spi) ->
     options =
       template: '<div class="page-tab">' +
                   '<span class="title"></span>' +
@@ -41,5 +41,5 @@
 
     initialize: -> initEvents()
 
-  $.fn.honegger.defaults.plugins.push(PageListComponent)
+  $.fn.honegger.defaults.plugins.push(PageList)
 )(jQuery)

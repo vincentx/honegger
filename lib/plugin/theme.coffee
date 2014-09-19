@@ -1,5 +1,5 @@
 (($) ->
-  ThemeComponent = (api, spi) ->
+  Theme = (api, spi) ->
     initEvents = ->
       $('*[data-theme]').on('click', (e)->
         target = $(e.currentTarget)
@@ -15,5 +15,5 @@
 
     initialize: -> initEvents()
 
-  $.fn.honegger.defaults.plugins.push(ThemeComponent)
+  $.fn.honegger.defaults.plugins.push(Theme)
 )(jQuery)
