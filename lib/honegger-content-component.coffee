@@ -32,7 +32,7 @@
 
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
-    new: (target, component, config, value = component.dataTemplate) ->
+    create: (target, component, config, value = component.dataTemplate) ->
       editor = setValues(component.editor(target, config), config, 'data-component-config-key')
       setValues(editor, value, 'name') if value?
       editor
@@ -56,7 +56,7 @@
       .attr('data-component-id', id)
 
     createComponentEditor = (target, name, id, config, value) ->
-      newComponent(ComponentEditor.new(target, components[name], config, value), id, name, config)
+      newComponent(ComponentEditor.create(target, components[name], config, value), id, name, config)
     createComponentControl = (target, name, id, config, value) ->
       newComponent(components[name].control(target, value), id, name, config).data('component-content', value)
     createPlaceHolder = (target, name, id, config, value) ->
