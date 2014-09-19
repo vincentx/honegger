@@ -45,18 +45,6 @@
       page = page.clone();
       options.spi.toPlaceholder(removeControls(page))
       page
-    getConfig: (page) ->
-      config = {}
-      options.spi.components(page).each ->
-        component = $(this)
-        config[component.attr('data-component-id')] = options.spi.getComponentConfiguration(component)
-      config
-    getContent: (page) ->
-      content = {}
-      options.spi.components(page).each ->
-        component = $(this)
-        content[component.attr('data-component-id')] = options.spi.getComponentContent(component)
-      content
   $.fn.honegger.page.defaults =
     template: '<div>' +
       '<input type="hidden" data-component-config-key="title" value="">' +

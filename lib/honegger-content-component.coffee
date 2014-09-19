@@ -19,13 +19,14 @@
         setValue(element, value) if value?
       editor
 
-    getValues = (editor, values, selector) ->
-      $("*[#{selector}]", editor).each ->
+    getValues = (editor, values, selector, filter_selector="data-role='component'") ->
+      $("[#{selector}]", editor).not($("[#{filter_selector}] [#{selector}]", editor)).each ->
         element = $(this)
         key = element.attr(selector)
         ensureExist(values, key) if key.indexOf('.') != -1
         eval("values.#{key} = getValue(element)")
       values
+
 
     getConfiguration: (editor) -> getValues(editor, editor.data('component-config') || {}, 'data-component-config-key')
 
@@ -98,11 +99,9 @@
         createPlaceHolder(component, component.data('component-type'), component.data('component-id'),
           ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component))
       spi.getComponentConfiguration = (component) ->
-        componentType = components[component.data('component-type')]
-        if componentType.getConfig? then componentType.getConfig(component) else ComponentEditor.getConfiguration(component)
+        ComponentEditor.getConfiguration(component)
       spi.getComponentContent = (component) ->
-        componentType = components[component.data('component-type')]
-        if componentType.getContent? then componentType.getContent(component) else ComponentEditor.getContent(component)
+        ComponentEditor.getContent(component)
 
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 

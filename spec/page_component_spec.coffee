@@ -158,12 +158,6 @@ describe 'page component', ->
 
     $('.add-layout', editor).click()
     $('.add-component', editor).click()
-
     placeholder = page.placeholder(editor)
-    config = page.getConfig(editor)
-    content = page.getContent(editor)
 
     expect($('div[data-component-type="textbox"]', placeholder).length).toBe(1)
-
-    expect(config).toEqual({'textbox-1' : { 'label' : '' }})
-    expect(content).toEqual({'textbox-1' : { 'content' : 'content' }})
