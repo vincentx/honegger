@@ -8,14 +8,12 @@
         return
       )
 
-    return {
-      extensionPoints: ->
 
-      extensions: ->
+    extensionPoints: ->
 
-      initialize: -> initEvents()
+    extensions: ->
 
-    }
+    initialize: -> initEvents()
 
   $.fn.honegger.defaults.plugins.push(ThemeComponent)
-)(jQuery);
+)(jQuery)

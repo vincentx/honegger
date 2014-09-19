@@ -27,21 +27,19 @@
         spi.composer.honegger('insertComponent', 'blank')
       )
 
-    return {
-      extensionPoints: ->
-        spi.initPageList = (pageListContainer) ->
-          spi.composer.append(pageListContainer)
-          pageListContainer
 
-      extensions: ->
-        pageList = spi.initPageList($('.page-list').clone().addClass('page-list-container'))
-        spi.composer.on('installPage', (event, name, page)->
-          installPage(pageList, name)
-        )
+    extensionPoints: ->
+      spi.initPageList = (pageListContainer) ->
+        spi.composer.append(pageListContainer)
+        pageListContainer
 
-      initialize: -> initEvents()
-    }
+    extensions: ->
+      pageList = spi.initPageList($('.page-list').clone().addClass('page-list-container'))
+      spi.composer.on('installPage', (event, name, page)->
+        installPage(pageList, name)
+      )
 
+    initialize: -> initEvents()
 
   $.fn.honegger.defaults.plugins.push(PageListComponent)
-)(jQuery);
+)(jQuery)

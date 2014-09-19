@@ -116,4 +116,5 @@
         off: -> destroyComponent('destroyControl')
 
   $.fn.honegger.defaults.plugins.push(ContentComponent)
-  $.fn.honegger.defaults.defaultMode = 'edit')(jQuery)
+  $.fn.honegger.defaults.defaultMode = 'edit'
+)(jQuery)

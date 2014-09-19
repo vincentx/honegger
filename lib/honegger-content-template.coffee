@@ -23,4 +23,4 @@
         content: content
 
   $.fn.honegger.defaults.plugins.push(ContentTemplate)
-)(jQuery);
+)(jQuery)

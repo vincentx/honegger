@@ -62,4 +62,4 @@
         spi.composer.trigger('installPage', [name, page])
 
   $.fn.honegger.defaults.plugins.push(PageComponent)
-)(jQuery);
+)(jQuery)
