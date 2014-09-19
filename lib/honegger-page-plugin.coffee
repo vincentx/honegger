@@ -8,6 +8,8 @@
         $(this).append(editor) if editor?
       target
     removeControls = (page) ->
+      $(page).children().each ->
+        $(this).remove() unless $(this).hasClass("page-content")
       $('.layout-container', page).children().each ->
         $(this).remove() unless $(this).hasClass("sections")
       $('.component-container', page).children().each ->

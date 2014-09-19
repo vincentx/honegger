@@ -160,4 +160,5 @@ describe 'page component', ->
     $('.add-component', editor).click()
     placeholder = page.placeholder(editor)
 
+    expect($('[data-component-config-key="title"]', placeholder).length).toBe(0)
     expect($('div[data-component-type="textbox"]', placeholder).length).toBe(1)
