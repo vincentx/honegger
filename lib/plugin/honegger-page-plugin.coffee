@@ -1,4 +1,5 @@
 (($) ->
+  #wait component list plugin
   $.fn.honegger.page = (options) ->
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
