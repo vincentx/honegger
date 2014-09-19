@@ -44,7 +44,7 @@
       page
     placeholder: (page) ->
       page = $('<div></div>') unless page
-      page = page.clone();
+      page = page.clone()
       options.spi.toPlaceholder(removeControls(page))
       page
   $.fn.honegger.page.defaults =

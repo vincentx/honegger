@@ -1,7 +1,7 @@
 (($) ->
   ComponentEditor = (->
     getValue = (element) ->
-      if element.attr('type') == 'checkbox' then element.is(':checked') else element.val();
+      if element.attr('type') == 'checkbox' then element.is(':checked') else element.val()
 
     setValue = (element, value) ->
       if element.attr('type') == 'checkbox' then element.prop('checked', value) else element.val(value)
