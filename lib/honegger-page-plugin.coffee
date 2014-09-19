@@ -17,7 +17,7 @@
       page
 
 
-    dataTempalte: {}
+    dataTemplate: {}
     editor: (page) ->
       page = $(options.template) unless page
       return page if $('.add-layout', page).length != 0
