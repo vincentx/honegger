@@ -34,5 +34,37 @@ describe 'content template', ->
     $('.add-component', $('div[data-component-id="blank-page-1"]', context.composer)).click()
     result = context.composer.honegger('getContentTemplate')
     expect($('div[data-component-type="textbox"]', $(result.template)).length).toBe(1)
-    expect(result.config).toEqual({'blank-page-1': { title: '', type: 'blank-page'}, 'textbox-1': { 'label': '', type: 'textbox' } })
+    expect(result.config).toEqual({'blank-page-1': { title: '', type: 'blank-page'}, 'textbox-1': { label: '', type: 'textbox' } })
     expect(result.content).toEqual({'blank-page-1': {type: 'blank-page'}, 'textbox-1': { content: 'content', type: 'textbox'} })
+
+  it 'should be able load template, configuration and content', ->
+    template = '<div id="composer">' +
+                 '<div data-role="component" data-component-type="blank-page" data-component-id="blank-page-1">'+
+                   '<div class="page-content layout-container">'+
+                     '<div class="sections">'+
+                       '<div class="section-block">'+
+                         '<div class="section-column component-container">'+
+                           '<div class="components">'+
+                             '<div data-role="component" data-component-type="textbox" data-component-id="textbox-1"></div>
+                           </div>'+
+                         '</div>'+
+                       '</div>'+
+                     '</div>'+
+                   '</div>'+
+                 '</div>'+
+               '</div>'
+    config =
+      'blank-page-1': { title: '', type: 'blank-page'}, 'textbox-1': { label: '', type: 'textbox' }
+    content =
+      'blank-page-1': {type: 'blank-page'}, 'textbox-1': { content: 'content', type: 'textbox'}
+    context.composer.honegger('loadContentTemplate', template, config, content)
+
+    page_component = $('[data-component-id="blank-page-1"]', context.composer)
+    expect(page_component).toHaveLength(1)
+    expect(page_component.data('component-config')).toEqual({title: '', type: 'blank-page'})
+    expect(page_component.data('component-content')).toEqual({type: 'blank-page'})
+
+    text_component = $('[data-component-id="textbox-1"]', context.composer)
+    expect(text_component).toHaveLength(1)
+    expect(text_component.data('component-config')).toEqual({label: '', type: 'textbox'})
+    expect(text_component.data('component-content')).toEqual({content: 'content', type: 'textbox'})

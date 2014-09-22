@@ -22,5 +22,10 @@
         config: config
         content: content
 
+      api.loadContentTemplate = (template, config, content) ->
+        spi.composer.html(template)
+        $.each config, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-config', value)
+        $.each content, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-content', value)
+
   $.fn.honegger.defaults.plugins.push(ContentTemplate)
 )(jQuery)
