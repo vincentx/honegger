@@ -24,14 +24,13 @@
     editor: (page) ->
       page = $(options.template) unless page
 
-      initComponentContainer(page)
-
-      $('.add-layout', page).click ->
-        layout = $(this).attr('data-layout')
+      page.unbind('click').bind('click', '.add-layout', (e)->
+        layout = $(e.target).parents('a').attr('data-layout')
 
         if options.layouts[layout]
-          layoutTemplate = initComponentContainer($(options.layouts[layout].layout).clone())
-          layoutTemplate.insertAfter($('.layout-container.active-page .sections .active').parent())
+          layoutTemplate = $(options.layouts[layout].layout).clone()
+          layoutTemplate.insertAfter($('.layout-container.active-page .sections .active').parent());
+      )
 
       options.spi.toEditor(page)
       page
