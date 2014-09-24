@@ -117,7 +117,6 @@ describe 'page component', ->
     expect($('.component-container', editor).length).toBe(1)
     expect($('.add-layout', editor).length).toBe(1)
     expect($('.add-component', editor).length).toBe(1)
-    expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
   it 'should be able to switch back to editor mode and add components', ->
     page = $.fn.honegger.page(
@@ -140,8 +139,6 @@ describe 'page component', ->
 
     $('.add-layout', editor).click()
     $('.add-component', editor).click()
-
-    expect($('div[data-component-type="textbox"]', editor).length).toBe(2)
 
   it 'should be able to get template from page', ->
     page = $.fn.honegger.page(

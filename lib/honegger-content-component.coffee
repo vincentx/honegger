@@ -63,11 +63,11 @@
       placeholder = if components[name].placeholder? then components[name].placeholder(target) else $('<div></div>')
       newComponent(placeholder, id, name, config).data('component-content', value)
 
-    createComponent = (components, creator) ->
-      components().each ->
-        component = $(this)
-        component.replaceWith(creator(component, component.data('component-type'),
-          component.data('component-id'), ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component)))
+    createComponent = (components, creator, target) ->
+      components().map(-> $(this).data('component-id')).each (index, id)->
+        component = $("[data-component-id='#{id}']", target)
+        component.replaceWith(creator(component, component.data('component-type'), id,
+          ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component)))
     destroyComponent = (destroy) ->
       spi.components().each ->
         component = $(this)
@@ -85,15 +85,15 @@
       spi.toEditor = (target) ->
         createComponent(->
           $('*[data-role="component"]', target)
-        , createComponentEditor)
+        , createComponentEditor, target)
       spi.toControl = (target) ->
         createComponent(->
           $('*[data-role="component"]', target)
-        , createComponentControl)
+        , createComponentControl, target)
       spi.toPlaceholder = (target) ->
         createComponent(->
           $('*[data-role="component"]', target)
-        , createPlaceHolder)
+        , createPlaceHolder, target)
 
       spi.getPlaceholder = (component) ->
         createPlaceHolder(component, component.data('component-type'), component.data('component-id'),

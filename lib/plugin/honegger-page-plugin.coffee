@@ -20,7 +20,7 @@
 
     dataTemplate: {}
     editor: (page) ->
-      page = $(options.template) unless page
+      page = if page then page.clone(true) else $(options.template)
       return page if $('.add-layout', page).length != 0
 
       $('.layout-container', page).each ->
@@ -37,7 +37,6 @@
             options.spi.insertComponent($('.components', $(this).parents('.component-container')), component)
           $('.layout-container .sections', page).append(layoutTemplate)
 
-      options.spi.toEditor(page)
       page
     control: (page) ->
       page = $('<div></div>') unless page

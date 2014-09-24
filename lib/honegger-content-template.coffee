@@ -18,14 +18,15 @@
           return if component.parents('*[data-role="component"]').length != 0
           component.replaceWith(spi.getPlaceholder($(this))[0].outerHTML)
 
-        template: composer[0].outerHTML
+        template: composer.html()
         config: config
         content: content
 
-      api.loadContentTemplate = (template, config, content) ->
+      api.loadContentTemplate = (template, config, content, mode) ->
         spi.composer.html(template)
         $.each config, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-config', value)
         $.each content, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-content', value)
+        api.changeMode(mode)
 
   $.fn.honegger.defaults.plugins.push(ContentTemplate)
 )(jQuery)
