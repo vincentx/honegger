@@ -136,7 +136,7 @@ describe 'content component extension point', ->
     target = $("#spi-editor")
     context.spi.toControl(target)
 
-    expect($("textarea[data-component-type='textbox']", target).length).toBe(1)
+    expect($("textarea[data-component-type='textbox']", target)).toHaveLength(1)
 
   it "should call spi to switch a template to editor", ->
     context.composer.honegger
@@ -144,7 +144,7 @@ describe 'content component extension point', ->
     target = $("#spi-editor")
     context.spi.toEditor(target)
 
-    expect($("*[data-component-config-key]", target).length).toBe(1)
+    expect($("*[data-component-config-key]", target)).toHaveLength(1)
 
   it "should call spi to switch to template from editor", ->
     context.composer.honegger
@@ -153,7 +153,7 @@ describe 'content component extension point', ->
     context.spi.toEditor(target)
     context.spi.toPlaceholder(target)
 
-    expect($("div[data-role='component']", target).length).toBe(1)
+    expect($("div[data-role='component']", target)).toHaveLength(1)
 
 
 

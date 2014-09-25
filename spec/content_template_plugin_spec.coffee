@@ -33,7 +33,7 @@ describe 'content template', ->
     $('.add-layout', $('div[data-component-id="blank-page-1"]', context.composer)).click()
     $('.add-component', $('div[data-component-id="blank-page-1"]', context.composer)).click()
     result = context.composer.honegger('getContentTemplate')
-    expect($('div[data-component-type="textbox"]', $(result.template)).length).toBe(1)
+    expect($('div[data-component-type="textbox"]', $(result.template))).toHaveLength(1)
     expect(result.config).toEqual({'blank-page-1': { title: '', type: 'blank-page'}, 'textbox-1': { label: '', type: 'textbox' } })
     expect(result.content).toEqual({'blank-page-1': {type: 'blank-page'}, 'textbox-1': { content: 'content', type: 'textbox'} })
 
