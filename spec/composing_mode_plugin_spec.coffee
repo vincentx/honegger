@@ -8,7 +8,7 @@ describe 'composing mode extension point', ->
   it 'should be able to add new composing mode to composer', ->
     composer = context.composer.honegger
       defaultMode: 'test'
-      extraPlugins: [
+      extraPlugins: [window.Page, window.PageList, window.Theme,
         (api, spi) ->
           extensions: ->
             spi.mode 'test',

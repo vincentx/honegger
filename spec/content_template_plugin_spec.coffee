@@ -23,7 +23,7 @@ describe 'content template', ->
   beforeEach ->
     loadFixtures('page-component.html')
     context.composer = $('#composer').honegger
-      extraPlugins: [TestPlugin]
+      extraPlugins: [TestPlugin, Page, PageList, Theme]
 
   xit 'should be able get template, configuration and content', ->
     # need to insert component

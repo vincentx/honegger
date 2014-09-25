@@ -17,7 +17,7 @@ describe 'page component', ->
     loadFixtures('page-component.html')
 
     $("#composer").honegger
-      extraPlugins: [textboxPlugin]
+      extraPlugins: [textboxPlugin, Page, PageList, Theme]
 
   it 'should create editor based on template', ->
     editor = $.fn.honegger.page(

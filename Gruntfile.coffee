@@ -10,7 +10,7 @@ module.exports = (grunt) ->
           'lib/honegger-plugins.js': ['lib/plugin/page.coffee', 'lib/plugin/theme.coffee',
                                       'lib/plugin/page-list.coffee' ]
           'build/honegger-spec-helpers.js': ['spec/spec_helpers.coffee']
-          'build/honegger-shared-spec.js': ['spec/should_*.coffee']
+#          'build/honegger-shared-spec.js': ['spec/should_*.coffee']
       compile:
         files:
           'build/honegger-spec.js': ['spec/composing_mode_plugin_spec.coffee',
