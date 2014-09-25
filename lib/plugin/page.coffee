@@ -4,12 +4,6 @@
   $.fn.honegger.page = (options) ->
     options = $.extend({}, $.fn.honegger.page.defaults, options)
 
-    initComponentContainer = (target) ->
-      $('.component-container', target).each ->
-        editor = options.componentEditor(options)
-        $(this).append(editor) if editor?
-      target
-
     removeControls = (page) ->
       $(page).children().each ->
         $(this).remove() unless $(this).hasClass('page-content')
@@ -22,7 +16,7 @@
     dataTemplate: {}
 
     editor: (page) ->
-      page = $(options.template) unless page
+      page = if page then page.clone(true) else $(options.template)
 
       page.unbind('click').bind('click', '.add-layout', (e)->
         layout = $(e.target).parents('a').attr('data-layout')
@@ -32,7 +26,6 @@
           layoutTemplate.insertAfter($('.layout-container.active-page .sections .active').parent());
       )
 
-      options.spi.toEditor(page)
       page
 
     control: (page) ->
