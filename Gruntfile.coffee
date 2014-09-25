@@ -6,9 +6,9 @@ module.exports = (grunt) ->
           bare: true
         files:
           'lib/honegger.js': ['lib/honegger-core.coffee', 'lib/honegger-content-component.coffee',
-                              'lib/honegger-content-template.coffee',
-                              'lib/plugin/honegger-page-plugin.coffee', 'lib/plugin/theme-plugin.coffee'
-                              'lib/plugin/page-list-plugin.coffee' ]
+                              'lib/honegger-content-template.coffee']
+          'lib/honegger-plugins.js': ['lib/plugin/page.coffee', 'lib/plugin/theme.coffee',
+                                      'lib/plugin/page-list.coffee' ]
           'build/honegger-spec-helpers.js': ['spec/spec_helpers.coffee']
           'build/honegger-shared-spec.js': ['spec/should_*.coffee']
       compile:
@@ -18,7 +18,7 @@ module.exports = (grunt) ->
                                      'spec/page_component_spec.coffee',
                                      'spec/content_template_plugin_spec.coffee']
     jasmine:
-      src: 'lib/**/*.js'
+      src: ['lib/honegger.js', 'lib/honegger-plugins.js']
       options:
         keepRunner: true
         specs: ['build/honegger-shared-spec.js', 'build/honegger-spec.js']

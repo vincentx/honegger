@@ -32,8 +32,8 @@
             </div>
         </div>
 
-        <div class="layout-panel">
-            <button class="add-layout" data-layout="one-column">
+        <div class="add-column-panel">
+            <button class="add-column" data-column-type="one-column">
                 <span class="glyphicon glyphicon-th-list"></span>
             </button>
         </div>
@@ -68,7 +68,7 @@
     </div>
 
     <script>
-        layout = $('.layout-panel')[0].outerHTML;
+        layout = $('.add-column-panel')[0].outerHTML;
         component = $('.component-panel')[0].outerHTML;
         oneColumn = $('.one-column')[0].outerHTML;
         Plugin = function(api, spi) {
@@ -77,9 +77,6 @@
                     spi.installPage("blank", {
                         addColumnButton: function() {
                             return $(layout);
-                        },
-                        componentEditor: function() {
-                            return $(component);
                         },
                         layouts: {
                             'one-column': {

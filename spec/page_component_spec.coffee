@@ -22,140 +22,111 @@ describe 'page component', ->
   it 'should create editor based on template', ->
     editor = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button data-layout="two-column"></button></div>')
+        $('<div class="add-column-panel"><button class="add-column" data-column-type="two-column"></button></div>')
       spi: context.spi
     ).editor()
-    expect($(".page-content", editor).length).toBe(1)
-    expect($('*[data-layout="two-column"]', editor).length).toBe(1)
+    expect($(".page-content", editor)).toHaveLength(1)
+    expect($('*[data-column-type="two-column"]', editor)).toHaveLength(1)
 
-  it 'should add component editor', ->
-    editor = $.fn.honegger.page(
-      template: $('.page-template')[0].outerHTML
-      addColumnButton: ->
-        $('<div><button data-layout="two-column"></button></div>')
-      componentEditor: ->
-        $('<div><button data-component="rich-text"></button></div>')
-      spi: context.spi
-    ).editor()
-    expect($('*[data-component="rich-text"]', editor).length).toBe(1)
-
-  it 'should append layout to page', ->
+  it 'should add column to page', ->
     editor = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button data-component="rich-text"></button></div>')
+        $('<div><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column' :
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     ).editor()
+    $('.add-column:first', editor).click()
+    expect($('.section-column', editor)).toHaveLength(2)
+    expect($('.add-column', editor)).toHaveLength(2)
 
-    $('.add-layout', editor).click()
-    expect($('.section-column', editor).length).toBe(1)
-    expect($('.section-column *[data-component="rich-text"]', editor).length).toBe(1)
-
-  it 'should append component to section', ->
+  xit 'should insert component to page', ->
     editor = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button class="add-component" data-component="textbox"></button></div>')
+        $('<div><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column' :
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     ).editor()
 
-    $('.add-layout', editor).click()
+    $('.add-column', editor).click()
     $('.add-component', editor).click()
 
     expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
   it 'should switch to control mode', ->
+    # need to insert component
     page = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button class="add-component" data-component="textbox"></button></div>')
+        $('<div class="add-column-panel"><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column':
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     )
     editor = page.editor()
 
-    $('.add-layout', editor).click()
-    $('.add-component', editor).click()
-
+    $('.add-column:first', editor).click()
     control = page.control(editor)
 
-    expect($('.component-container', control).length).toBe(1)
-    expect($('.add-layout', control).length).toBe(0)
-    expect($('.add-component', control).length).toBe(0)
-    expect($('textarea[data-component-type="textbox"]', control).length).toBe(1)
+    expect($('.column .component-container', control)).toHaveLength(2)
+    expect($('.add-column', control)).toHaveLength(0)
 
   it 'should be able to switch back to editor mode from control mode', ->
     page = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button class="add-component" data-component="textbox"></button></div>')
+        $('<div class="add-column-panel"><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column':
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     )
     editor = page.editor()
 
-    $('.add-layout', editor).click()
-    $('.add-component', editor).click()
+    $('.add-column:first', editor).click()
 
     control = page.control(editor)
     editor = page.editor(control)
 
-    expect($('.component-container', editor).length).toBe(1)
-    expect($('.add-layout', editor).length).toBe(1)
-    expect($('.add-component', editor).length).toBe(1)
+    expect($('.component-container', editor)).toHaveLength(2)
+    expect($('.add-column', editor)).toHaveLength(2)
 
   it 'should be able to switch back to editor mode and add components', ->
+    #need insert component
     page = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button class="add-component" data-component="textbox"></button></div>')
+        $('<div class="add-column-panel"><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column':
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     )
     editor = page.editor()
 
-    $('.add-layout', editor).click()
-    $('.add-component', editor).click()
+    $('.add-column:first', editor).click()
+    expect($('.section-column', editor)).toHaveLength(2)
 
     control = page.control(editor)
     editor = page.editor(control)
 
-    $('.add-layout', editor).click()
-    $('.add-component', editor).click()
+    $('.add-column:first', editor).click()
+    expect($('.section-column', editor)).toHaveLength(3)
 
   it 'should be able to get template from page', ->
+    # need to insert component
     page = $.fn.honegger.page(
       addColumnButton: ->
-        $('<div><button class="add-layout" data-layout="one-column"></button></div>')
-      componentEditor: ->
-        $('<div><button class="add-component" data-component="textbox"></button></div>')
+        $('<div class="add-column-panel"><button class="add-column" data-column-type="one-column"></button></div>')
       layouts:
         'one-column':
-          layout: $('.one-column').html()
+          layout: $('.one-column')[0].outerHTML
       spi: context.spi
     )
     editor = page.editor()
 
-    $('.add-layout', editor).click()
-    $('.add-component', editor).click()
+    $('.add-column', editor).click()
     placeholder = page.placeholder(editor)
-
+    expect(placeholder.find('.column')).toHaveLength(2)
     expect($('[data-component-config-key="title"]', placeholder).length).toBe(0)
-    expect($('div[data-component-type="textbox"]', placeholder).length).toBe(1)
