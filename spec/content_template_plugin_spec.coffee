@@ -11,7 +11,7 @@ describe 'content template', ->
   TestPlugin = (api, spi) ->
     extensions: ->
       spi.installPage('blank-page', {
-        layoutEditor: ->
+        addColumnButton: ->
           $('<div><button class="add-layout" data-layout="one-column"></button></div>')
         componentEditor: ->
           $('<div><button class="add-component" data-component="textbox"></button></div>')

@@ -24,7 +24,7 @@
       return page if $('.add-layout', page).length != 0
 
       $('.layout-container', page).each ->
-        $(this).append(options.layoutEditor(options))
+        $(this).append(options.addColumnButton(options))
 
       initComponentContainer(page)
 

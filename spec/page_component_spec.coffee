@@ -21,7 +21,7 @@ describe 'page component', ->
 
   it 'should create editor based on template', ->
     editor = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button data-layout="two-column"></button></div>')
       spi: context.spi
     ).editor()
@@ -31,7 +31,7 @@ describe 'page component', ->
   it 'should add component editor', ->
     editor = $.fn.honegger.page(
       template: $('.page-template')[0].outerHTML
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button data-layout="two-column"></button></div>')
       componentEditor: ->
         $('<div><button data-component="rich-text"></button></div>')
@@ -41,7 +41,7 @@ describe 'page component', ->
 
   it 'should append layout to page', ->
     editor = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button data-component="rich-text"></button></div>')
@@ -57,7 +57,7 @@ describe 'page component', ->
 
   it 'should append component to section', ->
     editor = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button class="add-component" data-component="textbox"></button></div>')
@@ -74,7 +74,7 @@ describe 'page component', ->
 
   it 'should switch to control mode', ->
     page = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button class="add-component" data-component="textbox"></button></div>')
@@ -97,7 +97,7 @@ describe 'page component', ->
 
   it 'should be able to switch back to editor mode from control mode', ->
     page = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button class="add-component" data-component="textbox"></button></div>')
@@ -120,7 +120,7 @@ describe 'page component', ->
 
   it 'should be able to switch back to editor mode and add components', ->
     page = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button class="add-component" data-component="textbox"></button></div>')
@@ -142,7 +142,7 @@ describe 'page component', ->
 
   it 'should be able to get template from page', ->
     page = $.fn.honegger.page(
-      layoutEditor: ->
+      addColumnButton: ->
         $('<div><button class="add-layout" data-layout="one-column"></button></div>')
       componentEditor: ->
         $('<div><button class="add-component" data-component="textbox"></button></div>')

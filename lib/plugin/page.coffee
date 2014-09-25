@@ -60,7 +60,7 @@
 
   Page = (api, spi) ->
     options =
-      layoutEditor: ->
+      addColumnButton: ->
 
       componentEditor: ->
 
