@@ -32,9 +32,9 @@
 
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
-    create: (target, component, config, value = component.dataTemplate) ->
-      editor = setValues(component.editor(target, config), config, 'data-component-config-key')
-      setValues(editor, value, 'name') if value?
+    create: (target, component, config, content = component.dataTemplate) ->
+      editor = setValues(component.editor(target, config, content), config, 'data-component-config-key')
+      setValues(editor, content, 'name') if content?
       editor
   )()
 
@@ -55,13 +55,13 @@
       component.data('component-config', config).attr('data-role', 'component').attr('data-component-type', type)
       .attr('data-component-id', id)
 
-    createComponentEditor = (target, name, id, config, value) ->
-      newComponent(ComponentEditor.create(target, components[name], config, value), id, name, config)
-    createComponentControl = (target, name, id, config, value) ->
-      newComponent(components[name].control(target, value), id, name, config).data('component-content', value)
-    createPlaceHolder = (target, name, id, config, value) ->
+    createComponentEditor = (target, name, id, config, content) ->
+      newComponent(ComponentEditor.create(target, components[name], config, content), id, name, config)
+    createComponentControl = (target, name, id, config, content) ->
+      newComponent(components[name].control(target, config, content), id, name, config).data('component-content', content)
+    createPlaceHolder = (target, name, id, config, content) ->
       placeholder = if components[name].placeholder? then components[name].placeholder(target) else $('<div></div>')
-      newComponent(placeholder, id, name, config).data('component-content', value)
+      newComponent(placeholder, id, name, config).data('component-content', content)
 
     createComponent = (components, creator, target) ->
       components().map(-> $(this).data('component-id')).each (index, id)->
