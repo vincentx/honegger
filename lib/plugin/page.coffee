@@ -18,7 +18,7 @@ $.fn.honegger.page = (options) ->
     page.find('.column').append(options.addColumnButton())
 
     page.unbind('click').bind('click', '.add-column', (e)->
-      column_type = $(e.target).attr('data-column-type')
+      column_type = $(e.target).closest('.add-column').attr('data-column-type')
 
       if options.layouts[column_type]
         columnTemplate = $(options.layouts[column_type].layout).clone()
