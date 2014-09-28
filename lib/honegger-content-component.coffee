@@ -32,7 +32,7 @@
 
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
-    create: (target, component, config, content = component.dataTemplate) ->
+    create: (target, component, config, content) ->
       editor = setValues(component.editor(target, config, content), config, 'data-component-config-key')
       setValues(editor, content, 'name') if content?
       editor
@@ -77,10 +77,10 @@
 
     extensionPoints: ->
       spi.installComponent = (name, component) -> components[name] = component
-      spi.insertComponent = (target, name, config = {}) ->
+      spi.insertComponent = (target, name, config = {}, content = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
-        target.append(createComponentEditor(null, name, IdGenerator.next(name), config))
+        target.append(createComponentEditor(null, name, IdGenerator.next(name), config, $.extend(components[name].dataTemplate,content)))
 
       spi.toEditor = (target) ->
         createComponent(->
@@ -105,7 +105,7 @@
 
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
-      api.insertComponent = (name, config = {}) -> spi.insertComponent(spi.composer, name, config)
+      api.insertComponent = (name, config = {}, content) -> spi.insertComponent(spi.composer, name, config, content)
 
     extensions: ->
       spi.mode 'edit',

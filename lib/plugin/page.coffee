@@ -11,9 +11,10 @@ $.fn.honegger.page = (options) ->
     $('.add-column-panel', page).each -> $(this).remove()
     page
 
-  dataTemplate: {}
+  dataTemplate:
+    title: 'New Page'
 
-  editor: (page) ->
+  editor: (page, config, content) ->
     page = if page then page.clone(true) else $(options.template)
     page.find('.column').append(options.addColumnButton())
 
