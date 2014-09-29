@@ -27,6 +27,7 @@
         $.each config, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-config', value)
         $.each content, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-content', value)
         api.changeMode(mode)
+        spi.composer.trigger('honegger.syncPages')
 
   $.fn.honegger.defaults.plugins.push(ContentTemplate)
 )(jQuery)
