@@ -25,7 +25,9 @@
       api.loadContentTemplate = (template, config, content, mode) ->
         spi.composer.html(template)
         $.each config, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-config', value)
-        $.each content, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-content', value)
+        $.each content, (key, value)->
+          value.content = $('<div/>').html(value.content).text() if value.content
+          $("[data-component-id='#{key}']", spi.composer).data('component-content', value)
         api.changeMode(mode)
         spi.composer.trigger('honegger.syncPages')
 
