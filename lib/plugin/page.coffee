@@ -9,6 +9,7 @@ $.fn.honegger.page = (options) ->
     $('.layout-container', page).children().each ->
       $(this).remove() unless $(this).hasClass("sections")
     $('.add-column-panel', page).each -> $(this).remove()
+    $('.section-block', page).each -> $(this).removeClass('active')
     page
 
   dataTemplate:
