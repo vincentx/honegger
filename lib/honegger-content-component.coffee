@@ -1,10 +1,22 @@
 (($) ->
   ComponentEditor = (->
     getValue = (element) ->
-      if element.attr('type') == 'checkbox' then element.is(':checked') else element.val()
+      if element.attr('type') == 'checkbox'
+        element.is(':checked')
+      else
+        if element.data('component-config-type') == 'json'
+          JSON.parse(element.val())
+        else
+          element.val()
 
     setValue = (element, value) ->
-      if element.attr('type') == 'checkbox' then element.prop('checked', value) else element.val(value)
+      if element.attr('type') == 'checkbox'
+        element.prop('checked', value)
+      else
+        if element.data('component-config-type') == 'json'
+          element.val(JSON.stringify(value))
+        else
+          element.val(value)
 
     ensureExist = (config, key) ->
       struct = config
