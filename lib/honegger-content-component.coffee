@@ -24,8 +24,8 @@
         struct[field] = {} unless struct[field]?
         struct = struct[field]
 
-    setValues = (editor, values, selector) ->
-      $("*[#{selector}]", editor).each ->
+    setValues = (editor, values, selector, filter_selector = "data-role='component'") ->
+      $("[#{selector}]", editor).not($("[#{filter_selector}] [#{selector}]", editor)).each ->
         element = $(this)
         value = eval("values.#{element.attr(selector)}")
         setValue(element, value) if value?
