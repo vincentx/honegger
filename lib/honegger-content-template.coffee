@@ -12,7 +12,7 @@
         config = {}
         content = {}
 
-        spi.components(composer).each ->
+        spi.components().each ->
           component = $(this)
           config[component.data('component-id')] = $.extend({}, spi.getComponentConfiguration(component),
             type: component.data('component-type'))

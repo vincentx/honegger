@@ -37,6 +37,7 @@
         key = element.attr(selector)
         ensureExist(values, key) if key.indexOf('.') != -1
         eval("values.#{key} = getValue(element)")
+        return true
       values
 
 
