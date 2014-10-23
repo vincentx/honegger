@@ -14,7 +14,7 @@
 
         spi.components().each ->
           component = $(this)
-          config[component.data('component-id')] = $.extend({}, spi.getComponentConfiguration(component),
+          config[component.data('component-id')] = $.extend({}, api.getComponentConfiguration(component),
             type: component.data('component-type'))
           content[component.data('component-id')] = $.extend({}, spi.getComponentContent(component),
             type: component.data('component-type'))

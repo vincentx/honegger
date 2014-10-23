@@ -42,6 +42,7 @@
 
 
     getConfiguration: (editor) -> getValues(editor, editor.data('component-config') || {}, 'data-component-config-key')
+    setConfiguration: (editor, value) -> setValues(editor, value, 'data-component-config-key')
 
     getContent: (editor) ->  getValues(editor, editor.data('component-content') || {}, 'name')
 
@@ -111,14 +112,15 @@
       spi.getPlaceholder = (component) ->
         createPlaceHolder(component, component.data('component-type'), component.data('component-id'),
           ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component))
-      spi.getComponentConfiguration = (component) ->
-        ComponentEditor.getConfiguration(component)
-      spi.getComponentContent = (component) ->
-        ComponentEditor.getContent(component)
+
+      spi.getComponentContent = (component) -> ComponentEditor.getContent(component)
 
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
       api.insertComponent = (name, config = {}, content) -> spi.insertComponent(spi.composer, name, config, content)
+
+      api.getComponentConfiguration = (component) -> ComponentEditor.getConfiguration(component)
+      api.setComponentConfiguration = (component, value) -> ComponentEditor.setConfiguration(component, value)
 
     extensions: ->
       spi.mode 'edit',
