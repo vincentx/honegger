@@ -102,7 +102,7 @@
         , createComponentEditor, target)
       spi.toControl = (target) ->
         createComponent(->
-          $('*[data-role="component"]', target)
+          $('*[data-role="component"][data-component-type!="page"]', target)
         , createComponentControl, target)
       spi.toPlaceholder = (target) ->
         createComponent(->

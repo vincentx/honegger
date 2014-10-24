@@ -45,7 +45,6 @@ $.fn.honegger.page = (options) ->
 
   control: (page) ->
     page = $('<div></div>') unless page
-    options.spi.toControl(removeControls(page))
     page
 
   placeholder: (page) ->
