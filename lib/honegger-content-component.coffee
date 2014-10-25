@@ -94,7 +94,7 @@
       spi.insertComponent = (target, name, config = {}, content = {}) ->
         return $.error("no such component #{name}") unless components[name]
         return $.error("components can only be created in edit mode") unless api.mode() == 'edit'
-        target.append(createComponentEditor(null, name, IdGenerator.next(name), config, $.extend(components[name].dataTemplate,content)))
+        target.append(createComponentEditor(null, name, IdGenerator.next(name), config, $.extend({}, components[name].dataTemplate, content)))
 
       spi.toEditor = (target) ->
         createComponent(->
