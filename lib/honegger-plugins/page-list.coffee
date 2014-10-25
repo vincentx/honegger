@@ -147,7 +147,7 @@ window.PageList = (api, spi) ->
       $('.edit-mode').not('.hide').find('.cancel-edit').click()
       page_title = $('.title',page_tab).text().trim()
       toggle_buttons()
-      title_input.val(page_title)
+      title_input.val(page_title).trigger('focus')
 
     $('.save-edit', page_tab).on 'click', ->
       page_title = sync_input()
