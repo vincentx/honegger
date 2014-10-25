@@ -6,8 +6,8 @@ $.fn.honegger.page = (options) ->
       $(this).remove() unless $(this).hasClass("page-content")
     $('.layout-container', page).children().each ->
       $(this).remove() unless $(this).hasClass("sections")
-    $('.add-column-panel', page).each -> $(this).remove()
-    $('.section-block', page).each -> $(this).removeClass('active')
+    $('.active', page).each -> $(this).removeClass('active')
+    $('.column-container', page).each -> $(this).remove()
     page
 
   construct_column = (column_type, elements)->
@@ -33,11 +33,11 @@ $.fn.honegger.page = (options) ->
     page = if page then page.clone(true).prepend(options.content_template) else construct_page(config)
     page.find('.column').append(options.addColumnButton())
 
-    page.unbind('click').bind('click', '.add-column', (e)->
-      column_type = $(e.target).closest('.add-column').attr('data-column-type')
+    page.on('click', '.add-column', (e)->
+      column_type = $(this).attr('data-column-type')
 
-      if options.layouts[column_type]
-        columnTemplate = $(options.layouts[column_type].layout).clone()
+      if options.spi.getColumn(column_type)
+        columnTemplate = $(options.spi.getColumn(column_type)).clone()
         columnTemplate.append(options.addColumnButton())
         columnTemplate.insertAfter($(e.target).closest('.column'))
     )
@@ -68,18 +68,60 @@ $.fn.honegger.page.defaults =
 window.Page = (api, spi) ->
   options =
     addColumnButton: ->
-      $('<div class="add-column-panel" title="Add layout">' +
-          '<a class="add-column" data-column-type="one-column"><i class="icon icon-columns"></i></a>' +
-        '</div>')
-    layouts:
-      'one-column':
-        layout: $('<div class="column one-column">' +
-                    '<div class="section-block">' +
-                      '<div class="section-column component-container">' +
-                        '<div class="components"></div>' +
-                      '</div>' +
-                    '</div>' +
-                  '</div>')
+      element = $('<div class="column-container">
+         <div class="add-column-panel">
+          <a class="add-column-button"><i class="icon icon-columns"></i></a>
+         </div>
+         <div class="column-select-panel" title="Add layout">
+          <p>Choose column you want to insert</p>
+          <ul>
+            <li class="add-column" data-column-type="single">
+              <div class="option-block">
+               <div class="option-column"></div>
+              </div>
+            </li>
+            <li class="add-column" data-column-type="two-equals">
+              <div class="option-block">
+                <div class="option-column"></div>
+                <div class="option-column"></div>
+              </div>
+            </li>
+            <li class="add-column" data-column-type="one-with-left-sidebar">
+              <div class="option-block">
+                <div class="option-column section-sidebar"></div>
+                <div class="option-column"></div>
+              </div>
+            </li>
+            <li class="add-column" data-column-type="one-with-right-sidebar">
+              <div class="option-block">
+                <div class="option-column"></div>
+                <div class="option-column section-sidebar"></div>
+              </div>
+            </li>
+            <li class="add-column" data-column-type="three-equals">
+              <div class="option-block">
+                <div class="option-column"></div>
+                <div class="option-column"></div>
+                <div class="option-column"></div>
+              </div>
+            </li>
+            <li class="add-column" data-column-type="one-with-two-sidebars">
+              <div class="option-block">
+                <div class="option-column section-sidebar"></div>
+                <div class="option-column"></div>
+                <div class="option-column section-sidebar"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>')
+
+      element.on('click', '.add-column-panel', ->
+        $(this).hide().next('.column-select-panel').show()
+      ).on('click', 'li', ->
+        $(this).closest('.column-select-panel').hide().prev('div.add-column-panel').show()
+      )
+      element
 
   extensionPoints: $.noop
 
@@ -88,7 +130,8 @@ window.Page = (api, spi) ->
   initialize: ->
     spi.installComponent('page', $.fn.honegger.page($.extend({spi: spi}, options)))
 
-    spi.composer.on('click', '.sections > div', (event)->
-      $('.active-page').find('.sections .active').removeClass('active')
-      $(event.currentTarget).find('.section-block').addClass('active')
+    spi.composer.on('click', '.section-column', (event)->
+      $('.active-page').find('.column').removeClass('highlight').find('.section-column.active').removeClass('active').end().
+        find('.column-container.active').removeClass('active')
+      $(event.currentTarget).addClass('active').parents('.column').addClass('highlight').find('.column-container').addClass('active')
     )

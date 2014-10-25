@@ -3,11 +3,11 @@ window.PageRepo = (api, spi)->
   template =
     blank: [
       single: [
-        ['livetext-title-1-0-0', 'livetext-text-1-0-0'],
+        ['livetext-resource-title-1-0-0', 'livetext-resource-text-1-0-0'],
       ],
 #      'two-equals': [
 #        []
-#        ['livetext-title-1-0-0', 'livetext-text-1-0-0']
+#        ['livetext-resource-title-1-0-0', 'livetext-resource-text-1-0-0']
 #      ]
     ]
   content =

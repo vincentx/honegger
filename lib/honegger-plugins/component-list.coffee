@@ -6,7 +6,7 @@ window.ComponentList = (api, spi)->
     list.on('click', '.add-component', ->
       type = $(this).attr('data-component-type')
       return unless type
-      active_column = $('.active-page .sections .active .components', spi.composer)
+      active_column = $('.active-page .sections .section-column.active .components', spi.composer)
       spi.insertComponent(active_column, type)
     )
 

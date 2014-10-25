@@ -50,21 +50,21 @@ window.Theme = (api, spi)->
           ])
 
   initEvents = ->
-    $('.themes-wrapper .cancel').on('click', ->
+    $('.themes-wrapper .cancel').on 'click', ->
       $('.themes-wrapper').slideUp({duration: 300})
       $('.theme-preview-modal').modal('hide')
-    )
 
-    $('*[data-theme]').on('click', (e)->
+    $('*[data-theme]').on 'click', (e)->
       target = $(e.currentTarget)
-      frameId = target.attr('data-theme')
-      $('.theme-preview-modal #theme-frame')[0].src = 'themes/' + frameId
-    )
+      theme_type = target.attr('data-theme')
+      iframe = $('.theme-preview-modal #theme-frame')
+      iframe[0].src = 'themes/' + theme_type
+      iframe.load ->
+        spi.composer.trigger('loadTheme', theme_type)
 
-    $('.composer .theme-button').on('click', ->
+    $('.composer .theme-button').on 'click', ->
       init_themes_list()
       set_data()
-    )
 
   extensionPoints: $.noop,
   extensions: $.noop,
