@@ -8,6 +8,7 @@
     <script src="../vendor/jquery-2.0.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="../lib/honegger.js"></script>
+    <script src="../lib/honegger-plugins.js"></script>
 </head>
 <body>
     <div class="btn-toolbar theme-toolbar">
@@ -74,7 +75,7 @@
         Plugin = function(api, spi) {
             return {
                 extensions: function() {
-                    spi.installPage("blank", {
+                    spi.installPage('blank', {
                         addColumnButton: function() {
                             return $(layout);
                         },
@@ -88,7 +89,7 @@
             }
         };
         $(".content").honegger({
-            extraPlugins: [Plugin]
+            extraPlugins: [Page, PageList, Theme, Plugin]
         });
 
         $(".content").honegger('insertComponent', 'blank');
