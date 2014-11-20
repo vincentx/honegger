@@ -1,4 +1,4 @@
-PAGE_NUMBER_LIMITATION = 6
+PAGE_NUMBER_LIMITATION = 7
 window.PageList = (api, spi) ->
   options =
     template: '<li>'+
@@ -32,8 +32,6 @@ window.PageList = (api, spi) ->
     order_pages.find("li[data-page-id='#{page_id}']").addClass('active-page-tab')
     spi.composer.find('.active-page').removeClass('active-page')
     spi.composer.find("[data-component-id='#{page_id}']").find('.page-content').addClass('active-page')
-      .find('.column').removeClass('highlight').end()
-      .find('.column:first').addClass('highlight').end()
       .find('.column-container').removeClass('active').end()
       .find('.column-container:first').addClass('active').end()
       .find('.section-block:first').addClass('active').end()
@@ -85,17 +83,28 @@ window.PageList = (api, spi) ->
         $('.page-list-container .page-order-list li').each (index, item) ->
           item = $(item)
           original_id = item.attr('data-page-id')
+
           $("[data-component-id='#{original_id}']").data('page-order', index)
-          if item.attr('data-page-id', "page-#{index + 1}").hasClass('active-page-tab')
-            $($('.page-list-indicator .page-order-list li').removeClass('active-page-tab')[index]).addClass('active-page-tab')
+
+          if item.hasClass('active-page-tab')
+            $('.page-list-indicator .page-order-list li').removeClass('active-page-tab')
+            highlight_item = _.find $('.page-list-indicator .page-order-list li'), (i)->
+              $(i).attr('data-page-id') == original_id
+            $(highlight_item).addClass('active-page-tab')
 
         spi.composer.find('[data-component-type="page"]').each (_, page) ->
           page = $(page)
           index = page.data('page-order')
-          page.attr('data-component-id', "page-#{index + 1}")
-            .find('input[name="order"]').val(index)
-    )
+          page.find('input[name="order"]').val(index)
 
+        indicator_items = $('.page-list-indicator .page-order-list li').remove()
+        indicator_container = $('.page-list-indicator .page-order-list')
+
+        controls.find('li').each (i, list) ->
+          indicator = _.find indicator_items, (item)-> $(item).attr('data-page-id')== $(list).attr('data-page-id')
+          $(indicator).tooltip(options.tooltip)
+          indicator_container.append(indicator)
+    )
 
   highlight_page = (current)->
     order_pages.find('.active-page-tab').removeClass('active-page-tab')
@@ -103,8 +112,7 @@ window.PageList = (api, spi) ->
     spi.composer.find('.active-page').removeClass('active-page')
     current_page = controls.find('.active-page-tab').data('page-id')
     spi.composer.find("[data-component-id='#{current_page}']").find('.page-content').addClass('active-page')
-      .find('.column').removeClass('highlight').end()
-      .find('.column:first').addClass('highlight').find('.column-container').addClass('active')
+      .find('.column:first').find('.column-container').addClass('active')
       .end().find('.section-column:first').addClass('active')
 
   append_new_page_control = (title, page_id)->
@@ -133,11 +141,12 @@ window.PageList = (api, spi) ->
       title_input.toggleClass('hide').prev('.title').toggleClass('hide')
 
     delete_page = ->
-      page_tab = $("[data-page-id='#{page_id}']")
+      sort_page_id = page_tab.attr('data-page-id')
+      page_tab = $("[data-page-id='#{sort_page_id}']")
       current = if page_tab.next('li').length == 0 then page_tab.prev('li') else page_tab.next('li')
       highlight_page "[data-page-id='#{current.attr("data-page-id")}']"
       page_tab.remove()
-      $("[data-component-id='#{page_id}']").remove()
+      $("[data-component-id='#{sort_page_id}']").remove()
 
     $('.edit-title', page_tab).on 'keypress', (e)->
       if e.which == 13
