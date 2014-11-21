@@ -1,4 +1,6 @@
 node_modules
+lib/honegger.js
+lib/honegger-plugins.js
 _SpecRunner.html
 .grunt
 .idea
