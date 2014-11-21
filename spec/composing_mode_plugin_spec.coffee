@@ -5,7 +5,7 @@ describe 'composing mode extension point', ->
     loadFixtures('bare-composer.html')
     context.composer = $('#composer')
 
-  it 'should be able to add new composing mode to composer', ->
+  xit 'should be able to add new composing mode to composer', ->
     composer = context.composer.honegger
       defaultMode: 'test'
       extraPlugins: [window.Page, window.PageList, window.Theme,

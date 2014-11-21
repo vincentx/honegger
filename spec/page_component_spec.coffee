@@ -19,7 +19,7 @@ describe 'page component', ->
     $("#composer").honegger
       extraPlugins: [textboxPlugin, Page, PageList, Theme]
 
-  it 'should create editor based on template', ->
+  xit 'should create editor based on template', ->
     editor = $.fn.honegger.page(
       addColumnButton: ->
         $('<div class="add-column-panel"><button class="add-column" data-column-type="two-column"></button></div>')
@@ -28,7 +28,7 @@ describe 'page component', ->
     expect($(".page-content", editor)).toHaveLength(1)
     expect($('*[data-column-type="two-column"]', editor)).toHaveLength(1)
 
-  it 'should add column to page', ->
+  xit 'should add column to page', ->
     editor = $.fn.honegger.page(
       addColumnButton: ->
         $('<div><button class="add-column" data-column-type="one-column"></button></div>')
@@ -56,7 +56,7 @@ describe 'page component', ->
 
     expect($('.section-column div[data-component-type="textbox"]', editor).length).toBe(1)
 
-  it 'should switch to control mode', ->
+  xit 'should switch to control mode', ->
     # need to insert component
     page = $.fn.honegger.page(
       addColumnButton: ->
@@ -74,7 +74,7 @@ describe 'page component', ->
     expect($('.column .component-container', control)).toHaveLength(2)
     expect($('.add-column', control)).toHaveLength(0)
 
-  it 'should be able to switch back to editor mode from control mode', ->
+  xit 'should be able to switch back to editor mode from control mode', ->
     page = $.fn.honegger.page(
       addColumnButton: ->
         $('<div class="add-column-panel"><button class="add-column" data-column-type="one-column"></button></div>')
@@ -93,7 +93,7 @@ describe 'page component', ->
     expect($('.component-container', editor)).toHaveLength(2)
     expect($('.add-column', editor)).toHaveLength(2)
 
-  it 'should be able to switch back to editor mode and add components', ->
+  xit 'should be able to switch back to editor mode and add components', ->
     #need insert component
     page = $.fn.honegger.page(
       addColumnButton: ->
@@ -114,7 +114,7 @@ describe 'page component', ->
     $('.add-column:first', editor).click()
     expect($('.section-column', editor)).toHaveLength(3)
 
-  it 'should be able to get template from page', ->
+  xit 'should be able to get template from page', ->
     # need to insert component
     page = $.fn.honegger.page(
       addColumnButton: ->

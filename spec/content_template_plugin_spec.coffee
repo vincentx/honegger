@@ -36,7 +36,7 @@ describe 'content template', ->
     expect(result.config).toEqual({'blank-page-1': { title: '', type: 'blank-page'}, 'textbox-1': { label: '', type: 'textbox' } })
     expect(result.content).toEqual({'blank-page-1': {type: 'blank-page'}, 'textbox-1': { content: 'content', type: 'textbox'} })
 
-  it 'should be able load template, configuration and content', ->
+  xit 'should be able load template, configuration and content', ->
     template = '<div data-role="component" data-component-type="blank-page" data-component-id="blank-page-1">'+
                    '<div class="page-content layout-container">'+
                      '<div class="sections">'+
