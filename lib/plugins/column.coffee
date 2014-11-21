@@ -140,5 +140,3 @@ window.Column = (api, spi)->
       if $(target).closest('.add-column-panel').length is 0 and $(target).closest('.column-select-panel').length is 0
         $('.column-select-panel').hide()
         $('.add-column-panel').css('visibility': 'visible')
-
-

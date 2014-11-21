@@ -57,16 +57,7 @@ $.fn.honegger.page.defaults =
     '<input type="hidden" name="order" value="">'
 
 window.Page = (api, spi) ->
-  options =
-    addColumnButton: ->
-      element.on('click', '.add-column-panel', ->
-        $(this).hide().next('.column-select-panel').show()
-      ).on('click', 'li', ->
-        $(this).closest('.column-select-panel').hide().prev('div.add-column-panel').show()
-      )
-      element
-
   extensionPoints: $.noop
   extensions: $.noop
   initialize: ->
-    spi.installComponent('page', $.fn.honegger.page($.extend({spi: spi}, options)))
+    spi.installComponent('page', $.fn.honegger.page(spi: spi))
