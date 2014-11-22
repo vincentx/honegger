@@ -11,5 +11,5 @@ window.ComponentList = (api, spi)->
   extensionPoints: $.noop
   extensions: $.noop
   initialize: ->
-    spi.installComponent(type, component) for type, component of Components
+    spi.installComponent(type, component) for type, component of HoneggerComponents
     initEvents()
