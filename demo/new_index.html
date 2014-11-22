@@ -2,23 +2,19 @@
 <html>
 <head>
     <title>Demo Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no,width=device-width">
     <link rel="stylesheet" href="css/editor.css">
 </head>
 <body>
-<div ng-view="" class="showcase-wrapper ng-scope">
-    <div id="wrap" class="showcase-editor composer editor-scope-indicator ng-scope">
+<div class="showcase-wrapper ng-scope">
+    <div id="wrap" class="showcase-editor composer editor-scope-indicator">
         <header class="section-composer-toolbar navbar navbar-fixed-top" id="freestyle-editor-toolbar"
                 role="navigation">
             <form class="form ng-pristine ng-valid" data-remote="true">
-                <div class="title clearfix" lt-field="title">
-                    <input type="text" name="title" class="form-control" value="" placeholder="Title" maxlength="64"
-                           lt-disable-enterkey="">
+                <div class="title clearfix">
+                    <input type="text" name="title" class="form-control" value="" placeholder="Input Your Title" maxlength="64">
                 </div>
-
-                <div class="btn btn-default preview-button" data-target="#showcase-theme-modal" data-toggle="modal">
-                    <i class="icon icon-eye-3"></i>
-                </div>
-
                 <div class="theme-button">
                     <div class="sidelines clearfix">
                         <div></div>
@@ -646,7 +642,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div data-dismiss="modal" class="close-button" lt-close-preview-modal=""></div>
-                            <iframe id="theme-frame" src=""></iframe>
+                            <iframe id="theme-frame"></iframe>
                         </div>
                     </div>
                 </div>
@@ -654,15 +650,17 @@
         </div>
     </div>
 </div>
-<script src="../vendor/jquery.min.js"></script>
-<script src="../vendor/jquery-ui.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/underscore.js"></script>
+<script src="js/slick.min.js"></script>
 <script src="js/components.js"></script>
 <script src="js/component_list_position.js"></script>
 <script src="js/editor_toolbar.js"></script>
 <script src="js/editor_toolbar_position.js"></script>
-<script src="../lib/honegger.js"></script>
-<script src="../lib/honegger-plugins.js"></script>
+<script src="js/honegger/honegger.js"></script>
+<script src="js/honegger/honegger-plugins-modified.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

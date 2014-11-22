@@ -15,7 +15,7 @@ function encode(string){
 }
 
 function text_editable(element, config, content){
-  var changeMode, edit, lost_focus, setContent, toolbar, value, view;
+  var edit, toolbar, value, view;
   view = element.find('.view');
   edit = element.find('.edit');
   if (content.content && content.content.trim()) {
@@ -24,7 +24,8 @@ function text_editable(element, config, content){
     edit.html(value);
   }
   toolbar = $('.text-editor-toolbar');
-  changeMode = function(edit_mode) {
+
+  var changeMode = function(edit_mode) {
     var edit_area, offset;
     element.toggleClass('edit-mode');
     element.find('.view,.edit').toggleClass('shown');
@@ -32,7 +33,7 @@ function text_editable(element, config, content){
       edit_area = element.find('.edit');
       edit_area.attr('contenteditable', 'true').focus();
       offset = edit_area.offset();
-      return toolbar.show(0, function() {
+      toolbar.show(0, function() {
         toolbar.offset({
           top: offset.top - 25,
           left: offset.left
@@ -44,7 +45,8 @@ function text_editable(element, config, content){
       return toolbar.hide().css('opacity', 0);
     }
   };
-  setContent = function(target, content) {
+
+  var setContent = function(target, content) {
     var content_input;
     view = element.find('.view');
     content_input = element.find('input[name="content"]');
@@ -57,7 +59,8 @@ function text_editable(element, config, content){
       return content_input.val('');
     }
   };
-  lost_focus = function() {
+
+  var lost_focus = function() {
     var target;
     view = element.find('.view');
     target = $('div.edit[contentEditable="true"]', element);
@@ -66,10 +69,10 @@ function text_editable(element, config, content){
     }
     content = target.html();
     changeMode(false);
-    return setContent(target, content.trim());
+    setContent(target, content.trim());
   };
   if (isChrome() === false) {
-    return $('div.composer').on('document-click', function(e, target) {
+    $('div.composer').on('document-click', function(e, target) {
       var component, text_toolbar;
       component = $(target).closest('.component.resource-text');
       text_toolbar = $(target).closest('.text-editor-toolbar');
@@ -85,7 +88,7 @@ function text_editable(element, config, content){
             if (toolbar.is(':visible')) {
               return;
             }
-            return changeMode(true);
+            changeMode(true);
           } else if (isSafari()) {
             return setTimeout(function() {
               if (toolbar.is(':visible')) {
@@ -99,14 +102,14 @@ function text_editable(element, config, content){
     });
   } else {
     element.find('.view,.edit-component').click(function() {
-      return changeMode(true);
+      changeMode(true);
     });
-    return element.find('div.edit[contentEditable]').blur(function(e) {
+    element.find('div.edit[contentEditable]').blur(function(e) {
       e.preventDefault();
       if ($(e.relatedTarget).closest('.text-editor-toolbar').length > 0) {
         return;
       }
-      return lost_focus();
+      lost_focus();
     });
   }
 }
@@ -162,45 +165,42 @@ function title_visible(element, config, content) {
   }
 }
 
-window.Components = {
+window.HoneggerComponents = {
   'resource-multimedia': {
     editor: function (component, config, content) {
-      var target = $('<div class=\"component resource-multimedia\" cm-resource-multimedia-editable cm-delete-component cm-draggable-component>\n   <div class=\"view shown\">\n    <span class=\"placeholder\">\n      <i class=\"icon icon-picture\"><\/i>\n      <span>Click here to upload Image/Youtube<\/span>\n    <\/span>\n   <\/div>\n   <div class=\"operation-bar\">\n       <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n       <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n       <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n   <\/div>\n   <input id=\"resource-component-content\" type=\"hidden\" name=\"content\">\n   <input type=\"hidden\" data-component-config-type=\"json\" data-component-config-key=\"permissions\">\n <div>');
+      var target = $('<div class=\"component resource-multimedia\">\n   <div class=\"view shown\">\n    <span class=\"placeholder\">\n      <i class=\"icon icon-picture\"><\/i>\n      <span>Click here to upload Image/Youtube<\/span>\n    <\/span>\n   <\/div>\n   <div class=\"operation-bar\">\n       <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n       <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n       <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n   <\/div>\n   <input id=\"resource-component-content\" type=\"hidden\" name=\"content\">\n <div>');
       target.data('component-config', config).data('component-content', content);
       return target;
     },
     dataTemplate: {"content": ""},
     control: function (component, config, content) {
-      var control;
-      control = $('<div class=\"component resource-multimedia\" cm-resource-multimedia-visible>\n  <div class=\"view shown\"><div>\n<div>\n');
+      var control = $('<div class=\"component resource-multimedia\">\n  <div class=\"view shown\"><div>\n<div>\n');
       control.attr('data-role', 'component').data('component-config', config).data('component-content', content);
       return control;
     }
   },
   'resource-text': {
     editor: function (component, config, content) {
-      var target = $('<div class=\"component resource-text\" cm-resource-text-editable cm-delete-component cm-draggable-component>\n   <div class=\"view shown\"><span class=\"placeholder\">Text: click here to edit<\/span><\/div>\n   <div class=\"edit\" contenteditable=\"false\"><\/div>\n   <div class=\"operation-bar\">\n       <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n       <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n       <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n   <\/div>\n   <input type=\"hidden\" name=\"content\">\n   <input type=\"hidden\" data-component-config-type=\"json\" data-component-config-key=\"permissions\">\n<\/div>');
+      var target = $('<div class=\"component resource-text\">\n   <div class=\"view shown\"><span class=\"placeholder\">Text: click here to edit<\/span><\/div>\n   <div class=\"edit\" contenteditable=\"false\"><\/div>\n   <div class=\"operation-bar\">\n       <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n       <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n       <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n   <\/div>\n   <input type=\"hidden\" name=\"content\">\n\n<\/div>');
       text_editable(target, config, content);
       return target;
     },
     dataTemplate: {"content": ""},
     control: function (component, config, content) {
-      var control;
-      control = $('<div class=\"component resource-text\" cm-resource-text-visible>\n  <div class=\"view shown\" ng-bind-html=\"text_content\"><\/div>\n<\/div>\n');
+      var control = $('<div class=\"component resource-text\">\n  <div class=\"view shown\" ng-bind-html=\"text_content\"><\/div>\n<\/div>\n');
       text_visible(control, config, content);
       return control;
     }
   },
   'resource-title': {
     editor: function (component, config, content) {
-      var target = $('<div class=\"component resource-title\" cm-resource-title-editable cm-delete-component cm-draggable-component>\n  <div class=\"view shown\"><span class=\"placeholder\">Title: click here to edit<\/span><\/div>\n  <div class=\"edit\">\n      <input type=\"text\" name=\"content\" maxlength=\"128\" value=\"\" placeholder=\"Title: click here to edit\">\n  <\/div>\n  <div class=\"operation-bar\">\n      <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n      <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n      <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n  <\/div>\n  <input type=\"hidden\" data-component-config-type=\"json\" data-component-config-key=\"permissions\">\n<\/div>');
+      var target = $('<div class=\"component resource-title\">\n  <div class=\"view shown\"><span class=\"placeholder\">Title: click here to edit<\/span><\/div>\n  <div class=\"edit\">\n      <input type=\"text\" name=\"content\" maxlength=\"128\" value=\"\" placeholder=\"Title: click here to edit\">\n  <\/div>\n  <div class=\"operation-bar\">\n      <a class=\"edit-component\"><i class=\"icon icon-pencil-1\"><\/i><\/a>\n      <a class=\"move-component\"><i class=\"icon icon-move-3\"><\/i><\/a>\n      <a class=\"delete-component\"><i class=\"icon icon-trash\"><\/i><\/a>\n  <\/div>\n<\/div>');
       title_editable(target, config, content);
       return target;
     },
     dataTemplate: {"content":""},
     control: function (component, config, content) {
-      var control;
-      control = $('<div class=\"component resource-title\" cm-resource-title-visible>\n  <div class=\"view shown\"><\/div>\n<div>\n');
+      var control = $('<div class=\"component resource-title\">\n  <div class=\"view shown\"><\/div>\n<div>\n');
       title_visible(control, config, content);
       return control;
     }
