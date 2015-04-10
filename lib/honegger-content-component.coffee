@@ -63,6 +63,13 @@
         componentIds[type] = componentIds[type] + 1 while $("[data-component-id='#{type}-#{componentIds[type]}']",
           spi.composer).length != 0
         "#{type}-#{componentIds[type]}"
+      load: (component_config) ->
+        for key, value of component_config
+          componentIds[value.type] = 1 unless componentIds[value.type]?
+          id = parseInt(key.replace(/.*-/,''))
+          componentIds[value.type] = switch
+            when id == componentIds[value.type] then id + 1
+            when id > componentIds[value.type] then id
     )()
 
     newComponent = (component, id, type, config) ->
@@ -114,7 +121,7 @@
           ComponentEditor.getConfiguration(component), ComponentEditor.getContent(component))
 
       spi.getComponentContent = (component) -> ComponentEditor.getContent(component)
-
+      spi.loadGenerator = (config) -> IdGenerator.load(config)
       spi.components = (target = spi.composer)-> $('*[data-role="component"]', target)
 
       api.insertComponent = (name, config = {}, content) -> spi.insertComponent(spi.composer, name, config, content)

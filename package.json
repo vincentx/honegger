@@ -6,8 +6,11 @@
   "license": "BSD",
   "devDependencies": {
     "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.13",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-jasmine": "~0.6.5",
     "grunt-contrib-watch": "~0.5.3"
+  },
+  "repository": {
   }
 }

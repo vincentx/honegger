@@ -29,6 +29,7 @@
         content: content
 
       api.loadContentTemplate = (template, config, content, mode) ->
+        spi.loadGenerator(config)
         spi.composer.html(template)
         $.each config, (key, value)-> $("[data-component-id='#{key}']", spi.composer).data('component-config', value)
         $.each content, (key, value)->
